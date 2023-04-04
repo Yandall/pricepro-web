@@ -1,0 +1,39 @@
+.navGroup {
+  border-bottom: 2px #228be6 solid;
+  border-radius: 1rem;
+  gap: 0;
+}
+
+.navGroup .navLink:first-child {
+  border-radius: 1rem 0 0 1rem;
+}
+
+.navGroup .navLink:last-child {
+  border-radius: 0 1rem 1rem 0;
+}
+
+.navGroup .navLink {
+  border-radius: 0;
+}
+
+.navGroup .navLink {
+  padding-inline: 1rem;
+}
+
+.navGroup .navLink.active {
+  background: #228be6;
+  background: linear-gradient(
+    0deg,
+    rgba(34, 139, 230, 0.5) 0%,
+    rgba(0, 0, 0, 0) 50%
+  );
+}
+
+.navGroup .navLink:hover {
+  background: #228be6;
+  background: linear-gradient(
+    0deg,
+    rgba(34, 139, 230, 0.5) 0%,
+    rgba(0, 0, 0, 0) 50%
+  );
+}

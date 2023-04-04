@@ -15,6 +15,7 @@ import { ReactElement, useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import NavBar from "./NavBar/NavBar";
 
 export default function MainLayout({ children }: { children: ReactElement }) {
   const router = useRouter();
@@ -36,11 +37,11 @@ export default function MainLayout({ children }: { children: ReactElement }) {
     }
   }, [query, setFormValues]);
 
-  const searchHandler = (data: { query: string }) => {
+  function searchHandler(data: { query: string }) {
     if (data.query?.trim() !== "") {
       router.push(`/search?q=${data.query}`);
     }
-  };
+  }
 
   return (
     <AppShell
@@ -79,17 +80,18 @@ export default function MainLayout({ children }: { children: ReactElement }) {
             >
               PricePro
             </Text>
+            <NavBar />
             <form
               style={{
                 display: "flex",
-                flex: "1 0 auto",
+                // flex: "1 0 auto",
                 justifyContent: "flex-end",
               }}
               onSubmit={searchForm.onSubmit(searchHandler)}
             >
               <TextInput
                 placeholder="Buscar producto"
-                style={{ flex: "1 0 auto" }}
+                // style={{ flex: "1 0 auto" }}
                 maw={300}
                 miw={100}
                 {...searchForm.getInputProps("query")}
