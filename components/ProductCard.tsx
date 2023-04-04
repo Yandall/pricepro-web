@@ -11,7 +11,7 @@ export type Product = {
 
 export default function ProductCard({ data }: { data: any }) {
   return (
-    <Card radius="lg" h="100%" shadow="md">
+    <Card radius="lg" h="100%" shadow="md" withBorder>
       <Card.Section>
         <Link href={`/product/${data.id}`}>
           <Image

@@ -31,14 +31,14 @@ export default function MainLayout({ children }: { children: ReactElement }) {
 
   useEffect(() => {
     // TODO: Warning al actualizar el input
-    if (query !== "") {
+    if (query) {
       setFormValues({ query: query as string });
     }
   }, [query, setFormValues]);
 
-  const searchHandler = ({ query }: { query: string }) => {
-    if (query.trim() !== "") {
-      router.push(`/search?q=${query}`);
+  const searchHandler = (data: { query: string }) => {
+    if (data.query?.trim() !== "") {
+      router.push(`/search?q=${data.query}`);
     }
   };
 

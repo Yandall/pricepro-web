@@ -20,24 +20,22 @@ const Page: NextPageWithLayout = () => {
   }
   const { data, error, isLoading } = useSWR(url, fetcher);
   return (
-    <>
-      <Flex miw={300} justify="center" direction="column" gap="lg">
-        <Grid>
-          {isLoading && (
-            <Grid.Col span={12} offset={6}>
-              <Loader size="xl" />
+    <Flex miw={300} justify="center" direction="column" gap="lg">
+      <Grid>
+        {isLoading && (
+          <Grid.Col span={12} offset={6}>
+            <Loader size="xl" />
+          </Grid.Col>
+        )}
+        {data &&
+          data.list.length > 0 &&
+          data.list.map((prod) => (
+            <Grid.Col key={prod.id} sm={6} md={4} lg={3}>
+              <ProductCard data={prod} />
             </Grid.Col>
-          )}
-          {data &&
-            data.list.length > 0 &&
-            data.list.map((prod) => (
-              <Grid.Col key={prod.id} sm={6} md={4} lg={3}>
-                <ProductCard data={prod} />
-              </Grid.Col>
-            ))}
-        </Grid>
-      </Flex>
-    </>
+          ))}
+      </Grid>
+    </Flex>
   );
 };
 
