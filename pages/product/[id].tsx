@@ -12,6 +12,7 @@ import {
   Group,
   Image,
   Popover,
+  Select,
   Text,
   Title,
 } from "@mantine/core";
@@ -19,6 +20,7 @@ import { IconShare } from "@tabler/icons-react";
 
 import ItemCard, { Item } from "@/components/ItemCard";
 import { useClipboard } from "@mantine/hooks";
+import { useEffect, useState } from "react";
 
 // TODO: Hacer fetcher generico y que valide la url
 const fetcher: Fetcher<{ product: Product; items: Item[] }, string> = (url) =>
@@ -29,6 +31,21 @@ const Page: NextPageWithLayout = () => {
   const { id: idProduct } = router.query;
   let url = `http://127.0.0.1:8080/items/${idProduct ?? 1}`;
   const { data, error, isLoading } = useSWR(url, fetcher);
+
+  const [order, setOrder] = useState<string | null>("pricePerUnit");
+  const { items } = data ? data : { items: new Array<Item>() };
+
+  // Se estan renderizando datos viejos
+  useEffect(() => {
+    if (order === "pricePerUnit") {
+      items.sort((prev, next) => prev.pricePerUnit - next.pricePerUnit);
+    } else if (order === "price") {
+      items.sort((prev, next) => prev.price - next.price);
+    }
+    // else {
+    //   items.sort((prev, next) => prev.quantity - next.quantity);
+    // }
+  }, [order, items]);
 
   const clipboard = useClipboard();
 
@@ -82,24 +99,46 @@ const Page: NextPageWithLayout = () => {
               <Badge>{data?.product.subcategory.name}</Badge>
               <Title>{data?.product.name}</Title>
               <Text>{data?.product.description}</Text>
-              <Group position="apart" maw={210}>
+              <Group position="apart" maw={250}>
                 <Text color="green">Más barato</Text>
                 <Group spacing="xs">
                   <Text weight={700} size="xl">
-                    ${data?.items[0]?.pricePerUnit}
+                    $
+                    {order === "pricePerUnit"
+                      ? data?.items[0]?.pricePerUnit
+                      : data?.items[0]?.price}
                   </Text>
-                  <Text>por {data?.product.units}</Text>
+                  {order === "pricePerUnit" && (
+                    <Text>por {data?.product.units}</Text>
+                  )}
                 </Group>
               </Group>
-              <Group position="apart" maw={210}>
+              <Group position="apart" maw={250}>
                 <Text color="red">Más caro</Text>
                 <Group spacing="xs">
                   <Text weight={700} size="xl">
-                    ${getLast(data?.items)?.pricePerUnit}
+                    $
+                    {order === "pricePerUnit"
+                      ? getLast(data?.items)?.pricePerUnit
+                      : getLast(data?.items)?.price}
                   </Text>
-                  <Text>por {data?.product.units}</Text>
+                  {order === "pricePerUnit" && (
+                    <Text>por {data?.product.units}</Text>
+                  )}
                 </Group>
               </Group>
+              <Grid.Col span={5}>
+                <Select
+                  label="Ordernar por"
+                  value={order}
+                  onChange={setOrder}
+                  data={[
+                    { value: "pricePerUnit", label: "Precio por unidad" },
+                    { value: "price", label: "Precio" },
+                    // { value: "quantity", label: "Cantidad" },
+                  ]}
+                ></Select>
+              </Grid.Col>
             </Grid.Col>
           </Grid>
         </Card>

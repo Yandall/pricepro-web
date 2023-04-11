@@ -15,8 +15,8 @@ export default function NavBar() {
       <NavLink label="Productos" href="/search" active={isActive("/search")} />
       <NavLink
         label="Sugerir producto"
-        href="/"
-        active={isActive("/product/[id]")}
+        href="/suggest"
+        active={isActive("/suggest")}
       />
       <NavLink label="Acerca de" href="/" active={isActive("/product/[id]s")} />
     </Group>

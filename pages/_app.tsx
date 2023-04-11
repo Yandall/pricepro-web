@@ -4,6 +4,7 @@ import {
   ColorSchemeProvider,
   MantineProvider,
 } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 import { NextPage } from "next";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -45,6 +46,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
             loader: "dots",
           }}
         >
+          <Notifications />
           {getLayout(<Component {...pageProps} />)}
         </MantineProvider>
       </ColorSchemeProvider>
