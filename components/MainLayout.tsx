@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   AppShell,
   Burger,
   Group,
@@ -8,9 +9,10 @@ import {
   Text,
   TextInput,
   Title,
+  useMantineColorScheme,
   useMantineTheme,
 } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
+import { IconMoonStars, IconSearch, IconSun } from "@tabler/icons-react";
 import { ReactElement, useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import { useRouter } from "next/router";
@@ -18,6 +20,8 @@ import Link from "next/link";
 import NavBar from "./NavBar/NavBar";
 
 export default function MainLayout({ children }: { children: ReactElement }) {
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const isDarkTheme = colorScheme === "dark";
   const router = useRouter();
   const searchForm = useForm({
     initialValues: {
@@ -81,24 +85,39 @@ export default function MainLayout({ children }: { children: ReactElement }) {
               PricePro
             </Text>
             <NavBar />
-            <form
-              style={{
-                display: "flex",
-                // flex: "1 0 auto",
-                justifyContent: "flex-end",
-              }}
-              onSubmit={searchForm.onSubmit(searchHandler)}
-            >
-              <TextInput
-                placeholder="Buscar producto"
-                // style={{ flex: "1 0 auto" }}
-                maw={300}
-                miw={100}
-                {...searchForm.getInputProps("query")}
-                icon={<IconSearch />}
-                radius="lg"
-              />
-            </form>
+            <Group>
+              <form
+                style={{
+                  display: "flex",
+                  // flex: "1 0 auto",
+                  justifyContent: "flex-end",
+                }}
+                onSubmit={searchForm.onSubmit(searchHandler)}
+              >
+                <TextInput
+                  placeholder="Buscar producto"
+                  // style={{ flex: "1 0 auto" }}
+                  maw={300}
+                  miw={100}
+                  {...searchForm.getInputProps("query")}
+                  icon={<IconSearch />}
+                  radius="lg"
+                />
+              </form>
+
+              <ActionIcon
+                variant="outline"
+                color={isDarkTheme ? "yellow" : "blue"}
+                onClick={() => toggleColorScheme()}
+                title="Toggle color scheme"
+              >
+                {isDarkTheme ? (
+                  <IconSun size="1.1rem" />
+                ) : (
+                  <IconMoonStars size="1.1rem" />
+                )}
+              </ActionIcon>
+            </Group>
           </Group>
         </Header>
       }
