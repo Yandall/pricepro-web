@@ -1,5 +1,4 @@
 import {
-  ActionIcon,
   AppShell,
   Burger,
   Group,
@@ -9,19 +8,17 @@ import {
   Text,
   TextInput,
   Title,
-  useMantineColorScheme,
   useMantineTheme,
 } from "@mantine/core";
-import { IconMoonStars, IconSearch, IconSun } from "@tabler/icons-react";
+import { IconSearch } from "@tabler/icons-react";
 import { ReactElement, useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import NavBar from "./NavBar/NavBar";
+import ColorSchemeToggle from "./ColorSchemeToggle";
 
 export default function MainLayout({ children }: { children: ReactElement }) {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-  const isDarkTheme = colorScheme === "dark";
   const router = useRouter();
   const searchForm = useForm({
     initialValues: {
@@ -44,7 +41,7 @@ export default function MainLayout({ children }: { children: ReactElement }) {
   function searchHandler(data: { query: string }) {
     if (data.query?.trim() !== "") {
       router.push(`/search?q=${data.query}`);
-    }
+    } else router.push(`/search`);
   }
 
   return (
@@ -89,14 +86,12 @@ export default function MainLayout({ children }: { children: ReactElement }) {
               <form
                 style={{
                   display: "flex",
-                  // flex: "1 0 auto",
                   justifyContent: "flex-end",
                 }}
                 onSubmit={searchForm.onSubmit(searchHandler)}
               >
                 <TextInput
                   placeholder="Buscar producto"
-                  // style={{ flex: "1 0 auto" }}
                   maw={300}
                   miw={100}
                   {...searchForm.getInputProps("query")}
@@ -104,19 +99,7 @@ export default function MainLayout({ children }: { children: ReactElement }) {
                   radius="lg"
                 />
               </form>
-
-              <ActionIcon
-                variant="outline"
-                color={isDarkTheme ? "yellow" : "blue"}
-                onClick={() => toggleColorScheme()}
-                title="Toggle color scheme"
-              >
-                {isDarkTheme ? (
-                  <IconSun size="1.1rem" />
-                ) : (
-                  <IconMoonStars size="1.1rem" />
-                )}
-              </ActionIcon>
+              <ColorSchemeToggle />
             </Group>
           </Group>
         </Header>
