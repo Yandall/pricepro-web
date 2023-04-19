@@ -5,8 +5,10 @@ import {
   Card,
   Grid,
   Group,
+  Image,
   List,
   Select,
+  SimpleGrid,
   Text,
   Textarea,
   TextInput,
@@ -19,7 +21,8 @@ import useSWRMutation from "swr/mutation";
 import { Product } from "@/components/ProductCard";
 import { useDebouncedValue } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import { IconCheck, IconX } from "@tabler/icons-react";
+import { IconCheck, IconUpload, IconX } from "@tabler/icons-react";
+import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 
 type Subcategory = {
   name: string;
@@ -33,6 +36,7 @@ type Suggestion = {
   units: string;
   subcategory: string;
   exampleUrl: string;
+  imgBuffer?: FileWithPath;
 };
 
 function isUrl(error: string) {
@@ -50,9 +54,17 @@ function getAutocompleteData(data?: { list: Product[] | Subcategory[] }) {
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 async function insertSuggestion(url: string, { arg }: { arg: Suggestion }) {
+  let formdata = new FormData();
+  formdata.append("name", arg.name);
+  formdata.append("description", arg.description);
+  formdata.append("units", arg.units);
+  formdata.append("exampleUrl", arg.exampleUrl);
+  formdata.append("subcategory", arg.subcategory);
+  if (arg.imgBuffer && arg.imgBuffer.size !== 0)
+    formdata.append("imgBuffer", arg.imgBuffer, arg.imgBuffer.name);
   return fetch(url, {
     method: "POST",
-    body: JSON.stringify(arg),
+    body: formdata,
   }).then((res) => res.json());
 }
 
@@ -75,6 +87,7 @@ export default function Page() {
       exampleUrl: isUrl("Dirección invalida"),
     },
   });
+  const [imgFile, setImgFile] = useState<FileWithPath>();
   const [productUrl, setProductUrl] = useState("");
   const debouncedProductUrl = useDebouncedValue(productUrl, 500);
   const { data: productData } = useSWR<{ list: Product[] }>(
@@ -109,6 +122,7 @@ export default function Page() {
       form.setFieldError("subcategory", "Elige un valor de la lista");
       return;
     }
+    if (imgFile && imgFile.size !== 0) values.imgBuffer = imgFile;
     const newSuggestion = Object.assign({}, values, {
       subcategory: +subcategoryId,
     });
@@ -116,6 +130,7 @@ export default function Page() {
       const res = await sendSuggestion(newSuggestion);
       if (res.ok) {
         form.reset();
+        setImgFile(undefined);
         notifications.show({
           title: "Éxito",
           message: "La sugerencia se ha enviado",
@@ -214,6 +229,29 @@ export default function Page() {
               mb={20}
               {...form.getInputProps("exampleUrl")}
             />
+            <Dropzone
+              accept={IMAGE_MIME_TYPE}
+              onDrop={(file) => setImgFile(file[0])}
+              maxFiles={1}
+              maxSize={3 * 1024 ** 2}
+            >
+              <Group position="center" spacing="xl">
+                <IconUpload />
+                Sube una imagen
+              </Group>
+            </Dropzone>
+            {imgFile && (
+              <SimpleGrid
+                cols={4}
+                breakpoints={[{ maxWidth: "sm", cols: 1 }]}
+                mt="xl"
+              >
+                <Image
+                  src={URL.createObjectURL(imgFile)}
+                  alt={form.values.name}
+                />
+              </SimpleGrid>
+            )}
             <Group position="right" mt="md">
               <Button type="submit">Enviar</Button>
             </Group>
