@@ -2,7 +2,7 @@ import { getLayout } from "@/components/MainLayout";
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
 import { Product } from "@/components/ProductCard";
-import useSWR from "swr";
+import useSWR, { SWRConfig } from "swr";
 import {
   ActionIcon,
   Badge,
@@ -21,11 +21,22 @@ import { IconShare } from "@tabler/icons-react";
 import ItemCard, { Item } from "@/components/ItemCard";
 import { useClipboard } from "@mantine/hooks";
 import { useEffect, useState } from "react";
+import { NextPageContext } from "next";
+import Head from "next/head";
+
+type ResponseData =
+  | {
+      product: Product;
+      items: Item[];
+    }
+  | undefined;
 
 const fetcher = (url: string) => {
   if (url !== "")
     return fetch(url)
-      .then((res) => res.json())
+      .then(async (res) => {
+        return res.json();
+      })
       .then((res) => {
         if (res.error) throw res;
         return res;
@@ -33,25 +44,23 @@ const fetcher = (url: string) => {
   return new Promise<any>((resolve) => resolve(undefined));
 };
 
-const Page: NextPageWithLayout = () => {
+function Content() {
   const router = useRouter();
   const { id: idProduct } = router.query;
   let url = idProduct ? `http://127.0.0.1:8080/items/${idProduct}` : "";
-  const { data, mutate } = useSWR<{
-    product: Product;
-    items: Item[];
-  }>(url, fetcher);
+
+  const { data, mutate } = useSWR<ResponseData>(url, fetcher);
   const [order, setOrder] = useState<string | null>("pricePerUnit");
   const { items } = data?.items ? data : { items: new Array<Item>() };
   useEffect(() => {
-    if (order === "pricePerUnit") {
+    if (order === "pricePerUnit" && items.length > 0) {
       mutate({
         ...data!,
         items: Array.from(
           items.sort((prev, next) => prev.pricePerUnit - next.pricePerUnit)
         ),
       });
-    } else if (order === "price") {
+    } else if (order === "price" && items.length > 0) {
       mutate({
         ...data!,
         items: Array.from(items.sort((prev, next) => prev.price - next.price)),
@@ -72,8 +81,15 @@ const Page: NextPageWithLayout = () => {
   }
   return (
     <>
+      <Head>
+        {data ? (
+          <title>{`${data.product.name} - PricePro`}</title>
+        ) : (
+          <title>Producto no encontrado - PricePro</title>
+        )}
+      </Head>
       <Flex direction="column" align="center" mt={10}>
-        {data && data.product ? (
+        {data ? (
           <>
             <Card
               bg="transparent"
@@ -81,6 +97,7 @@ const Page: NextPageWithLayout = () => {
               shadow="lg"
               radius="lg"
               padding="lg"
+              w="100%"
               styles={{ "align-items": "center" }}
             >
               <Grid>
@@ -105,7 +122,6 @@ const Page: NextPageWithLayout = () => {
                       <Text>Copiado</Text>
                     </Popover.Dropdown>
                   </Popover>
-
                   <Image
                     radius="lg"
                     src="https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80"
@@ -176,8 +192,37 @@ const Page: NextPageWithLayout = () => {
       </Flex>
     </>
   );
+}
+
+const Page: NextPageWithLayout<
+  { props: { fallback: { [k: string]: ResponseData } } },
+  {}
+> = ({ props: { fallback } }) => {
+  return (
+    <SWRConfig value={{ fallback: fallback }}>
+      <Content />
+    </SWRConfig>
+  );
 };
 
 Page.getLayout = getLayout;
+
+Page.getInitialProps = async (ctx: NextPageContext) => {
+  const { id: idProduct } = ctx.query;
+  const url = `http://127.0.0.1:8080/items/${idProduct}`;
+  var res: ResponseData;
+  try {
+    res = await fetcher(url);
+  } catch (error) {
+    console.log(error);
+  }
+  return {
+    props: {
+      fallback: {
+        [url]: res,
+      },
+    },
+  };
+};
 
 export default Page;
