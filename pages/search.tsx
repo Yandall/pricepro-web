@@ -3,10 +3,20 @@ import { NextPageWithLayout } from "./_app";
 import { getLayout } from "@/components/MainLayout";
 import { Flex, Grid, Loader } from "@mantine/core";
 import ProductCard, { Product } from "@/components/ProductCard";
-import useSWR, { Fetcher } from "swr";
+import useSWR from "swr";
 
-const fetcher: Fetcher<{ list: Product[] }, string> = (url) =>
-  fetch(url).then((res) => res.json());
+const fetcher = (url: string) => {
+  if (url !== "")
+    return fetch(url)
+      .then(async (res) => {
+        return res.json();
+      })
+      .then((res) => {
+        if (res.error) throw res;
+        return res;
+      });
+  return new Promise<any>((resolve) => resolve(undefined));
+};
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
@@ -18,7 +28,7 @@ const Page: NextPageWithLayout = () => {
   if (query.q && query.q != "") {
     url += query.q;
   }
-  const { data, error, isLoading } = useSWR(url, fetcher);
+  const { data, isLoading } = useSWR<{ list: Product[] }>(url, fetcher);
   return (
     <Flex miw={300} justify="center" direction="column" gap="lg">
       <Grid>
@@ -30,7 +40,7 @@ const Page: NextPageWithLayout = () => {
         {data &&
           data.list.length > 0 &&
           data.list.map((prod) => (
-            <Grid.Col key={prod.id} sm={6} md={4} lg={3}>
+            <Grid.Col key={prod.id} span={6} md={4} lg={3} xl={2}>
               <ProductCard data={prod} />
             </Grid.Col>
           ))}

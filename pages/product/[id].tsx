@@ -11,6 +11,7 @@ import {
   Grid,
   Group,
   Image,
+  MediaQuery,
   Popover,
   Select,
   Text,
@@ -23,6 +24,7 @@ import { useClipboard } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { NextPageContext } from "next";
 import Head from "next/head";
+import PlaceholderImg from "@/components/PlaceHolderImg";
 
 type ResponseData =
   | {
@@ -101,7 +103,7 @@ function Content() {
               styles={{ "align-items": "center" }}
             >
               <Grid>
-                <Grid.Col span={5}>
+                <Grid.Col span={12} xs={5}>
                   <Popover withArrow shadow="md" onOpen={clipboardHandler}>
                     <Popover.Target>
                       <ActionIcon
@@ -122,14 +124,28 @@ function Content() {
                       <Text>Copiado</Text>
                     </Popover.Dropdown>
                   </Popover>
-                  <Image
-                    radius="lg"
-                    src="https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80"
-                    withPlaceholder
-                    alt={data.product.name}
-                  ></Image>
+                  <MediaQuery largerThan="md" styles={{ display: "none" }}>
+                    <Image
+                      radius="lg"
+                      src={data.product.imgUrl}
+                      height={200}
+                      placeholder={<PlaceholderImg />}
+                      withPlaceholder
+                      alt={data.product.name}
+                    ></Image>
+                  </MediaQuery>
+                  <MediaQuery smallerThan="md" styles={{ display: "none" }}>
+                    <Image
+                      radius="lg"
+                      height={400}
+                      src={data.product.imgUrl}
+                      placeholder={<PlaceholderImg />}
+                      withPlaceholder
+                      alt={data.product.name}
+                    ></Image>
+                  </MediaQuery>
                 </Grid.Col>
-                <Grid.Col span={7}>
+                <Grid.Col span={12} xs={7}>
                   <Badge>{data.product.subcategory.name}</Badge>
                   <Title>{data.product.name}</Title>
                   <Text>{data.product.description}</Text>
@@ -161,13 +177,16 @@ function Content() {
                       )}
                     </Group>
                   </Group>
-                  <Grid.Col span={5}>
+                  <Grid.Col span={7} md={5}>
                     <Select
                       label="Ordernar por"
                       value={order}
                       onChange={setOrder}
                       data={[
-                        { value: "pricePerUnit", label: "Precio por unidad" },
+                        {
+                          value: "pricePerUnit",
+                          label: "Precio por unidad",
+                        },
                         { value: "price", label: "Precio" },
                         // { value: "quantity", label: "Cantidad" },
                       ]}
@@ -180,7 +199,7 @@ function Content() {
               {data &&
                 data.items.length > 0 &&
                 data.items.map((item, index) => (
-                  <Grid.Col key={item.id} xs={4} sm={4} md={4} lg={3} xl={2}>
+                  <Grid.Col key={item.id} span={6} lg={3} xl={2}>
                     <ItemCard data={item} position={index + 1} />
                   </Grid.Col>
                 ))}
@@ -194,10 +213,9 @@ function Content() {
   );
 }
 
-const Page: NextPageWithLayout<
-  { props: { fallback: { [k: string]: ResponseData } } },
-  {}
-> = ({ props: { fallback } }) => {
+const Page: NextPageWithLayout<{
+  props: { fallback: { [k: string]: ResponseData } };
+}> = ({ props: { fallback } }) => {
   return (
     <SWRConfig value={{ fallback: fallback }}>
       <Content />

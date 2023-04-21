@@ -1,12 +1,11 @@
 import { Badge, Card, Flex, Image, Text } from "@mantine/core";
-import Link from "next/link";
 import { Product } from "./ProductCard";
 
 export type Item = {
   id: number;
   name: string;
-  url: string
-  imageUrl: string
+  url: string;
+  imageUrl: string;
   price: number;
   pricePerUnit: number;
   quantity: number;
@@ -26,14 +25,13 @@ export default function ItemCard({
     <Card h="100%" style={{ display: "flex", flexDirection: "column" }}>
       <Card.Section>
         <a href={data.url}>
-        <Image
-          // src={data.imageUrl}
-          src="https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80"
-          alt={data.name}
-          fit="contain"
-          height={150}
-          withPlaceholder
-        />
+          <Image
+            src={data.imageUrl}
+            alt={data.name}
+            fit="contain"
+            height={150}
+            withPlaceholder
+          />
         </a>
       </Card.Section>
       <Flex

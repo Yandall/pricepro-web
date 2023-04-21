@@ -1,16 +1,14 @@
 import { Text } from "@mantine/core";
 import Link from "next/link";
-import styles from "./NavBar.module.css";
+import styles from "./NavList.module.css";
 
-export default function NavLink({
-  label,
-  href,
-  active,
-}: {
+export type NavLinkProps = {
   label: string;
   href: string;
   active?: boolean;
-}) {
+};
+
+export default function NavLink({ label, href, active }: NavLinkProps) {
   return (
     <Text
       component={Link}
