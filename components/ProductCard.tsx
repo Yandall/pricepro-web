@@ -25,7 +25,7 @@ export default function ProductCard({ data }: { data: Product }) {
       <Card.Section style={{ flex: "1 1 60%" }} pos="relative">
         <Link href={`/product/${data.id}`}>
           <Image
-            src={data.imgUrl}
+            src={data.imgUrl !== "" ? data.imgUrl : undefined}
             alt={data.name}
             withPlaceholder
             fit="cover"
