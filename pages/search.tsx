@@ -20,10 +20,10 @@ const fetcher = (url: string) => {
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
-
+  const apiHost = process.env.NEXT_PUBLIC_API_HOST;
   const query = router.query;
 
-  let url = "http://127.0.0.1:8080/products/search?search=";
+  let url = `${apiHost}products/search?search=`;
 
   if (query.q && query.q != "") {
     url += query.q;

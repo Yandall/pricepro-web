@@ -69,6 +69,7 @@ async function insertSuggestion(url: string, { arg }: { arg: Suggestion }) {
 }
 
 export default function Page() {
+  const apiHost = process.env.NEXT_PUBLIC_API_HOST;
   const form = useForm<Suggestion>({
     initialValues: {
       name: "",
@@ -97,21 +98,19 @@ export default function Page() {
   const { name: productQuery } = form.values;
 
   const { data: subcategoryData } = useSWR<{ list: Subcategory[] }>(
-    "http://127.0.0.1:8080/list/subcategory",
+    `${apiHost}list/subcategory`,
     fetcher
   );
 
-  const suggestionURL = "http://127.0.0.1:8080/products/suggest";
+  const suggestionURL = `${apiHost}products/suggest`;
   const { trigger: sendSuggestion } = useSWRMutation(
     suggestionURL,
     insertSuggestion
   );
 
   useEffect(() => {
-    setProductUrl(
-      `http://127.0.0.1:8080/products/search?search=${productQuery}`
-    );
-  }, [productQuery]);
+    setProductUrl(`${apiHost}products/search?search=${productQuery}`);
+  }, [productQuery, apiHost]);
 
   async function submitSuggestion(values: Suggestion) {
     if (form.validate().hasErrors) return;

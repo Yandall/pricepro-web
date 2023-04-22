@@ -18,7 +18,6 @@ import {
   Title,
 } from "@mantine/core";
 import { IconShare } from "@tabler/icons-react";
-
 import ItemCard, { Item } from "@/components/ItemCard";
 import { useClipboard } from "@mantine/hooks";
 import { useEffect, useState } from "react";
@@ -47,9 +46,10 @@ const fetcher = (url: string) => {
 };
 
 function Content() {
+  const apiHost = process.env.NEXT_PUBLIC_API_HOST;
   const router = useRouter();
   const { id: idProduct } = router.query;
-  let url = idProduct ? `http://127.0.0.1:8080/items/${idProduct}` : "";
+  let url = idProduct ? `${apiHost}items/${idProduct}` : "";
 
   const { data, mutate } = useSWR<ResponseData>(url, fetcher);
   const [order, setOrder] = useState<string | null>("pricePerUnit");
@@ -73,7 +73,7 @@ function Content() {
   const clipboard = useClipboard();
 
   function clipboardHandler() {
-    let copyUrl = `http://127.0.0.1:3000/items/${idProduct}`;
+    let copyUrl = window.location.href;
     clipboard.copy(copyUrl);
   }
 
@@ -227,7 +227,8 @@ Page.getLayout = getLayout;
 
 Page.getInitialProps = async (ctx: NextPageContext) => {
   const { id: idProduct } = ctx.query;
-  const url = `http://127.0.0.1:8080/items/${idProduct}`;
+  const apiHost = process.env.NEXT_PUBLIC_API_HOST;
+  const url = `${apiHost}items/${idProduct}`;
   var res: ResponseData;
   try {
     res = await fetcher(url);
