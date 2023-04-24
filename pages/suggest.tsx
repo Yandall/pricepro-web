@@ -39,10 +39,11 @@ type Suggestion = {
   imgBuffer?: FileWithPath;
 };
 
-function isUrl(error: string) {
+function isUrl(error: string, required = true) {
   const urlRegex =
     /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/;
   return (value: string) => {
+    if (!required && value === "") return null;
     return urlRegex.test(value) ? null : error;
   };
 }
@@ -85,7 +86,7 @@ export default function Page() {
         value.length < 10 ? "Describe más el producto" : null,
       units: (value) => (value === "" ? "Debes eligir un valor" : null),
       subcategory: (value) => (value === "" ? "Debes elegir un valor" : null),
-      exampleUrl: isUrl("Dirección invalida"),
+      exampleUrl: isUrl("Dirección invalida", false),
     },
   });
   const [imgFile, setImgFile] = useState<FileWithPath>();
@@ -223,7 +224,6 @@ export default function Page() {
             />
             <TextInput
               label="Url ejemplo"
-              withAsterisk
               placeholder="https://www.exito.com/arroz-blanco-arroba-12500-gr-61887/p"
               mb={20}
               {...form.getInputProps("exampleUrl")}
