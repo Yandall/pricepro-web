@@ -156,7 +156,7 @@ export default function Page() {
 
   return (
     <Grid justify="center" pt={20}>
-      <Grid.Col span={8}>
+      <Grid.Col span={11} md={8}>
         <Title order={1} mb={20}>
           Sugerir un producto
         </Title>
@@ -164,7 +164,7 @@ export default function Page() {
           Llena el formulario para sugerir un producto que pienses que debería
           estar en nuestra lista.
         </Text>
-        <Text inline>
+        <Text>
           Tu sugerencia será revisada y si cumple con nuestras condiciones la
           añadiremos a la lista de <b>Productos</b>.
         </Text>

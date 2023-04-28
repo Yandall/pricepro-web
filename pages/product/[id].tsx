@@ -109,7 +109,7 @@ function Content() {
                       <ActionIcon
                         size="lg"
                         variant="outline"
-                        color="indigo"
+                        color="dark"
                         radius="xl"
                         style={{
                           position: "absolute",
@@ -146,7 +146,7 @@ function Content() {
                   </MediaQuery>
                 </Grid.Col>
                 <Grid.Col span={12} xs={7}>
-                  <Badge>{data.product.subcategory.name}</Badge>
+                  <Badge color="teal">{data.product.subcategory.name}</Badge>
                   <Title>{data.product.name}</Title>
                   <Text>{data.product.description}</Text>
                   <Group position="apart" maw={250}>

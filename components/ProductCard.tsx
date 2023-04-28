@@ -57,7 +57,7 @@ export default function ProductCard({ data }: { data: Product }) {
           </Text>
         </Group>
 
-        <Badge color="indigo">{data.subcategory.name}</Badge>
+        <Badge color="teal">{data.subcategory.name}</Badge>
       </Container>
     </Card>
   );

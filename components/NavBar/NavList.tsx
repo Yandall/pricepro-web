@@ -2,9 +2,12 @@ import { Group } from "@mantine/core";
 import { useRouter } from "next/router";
 import styles from "./NavList.module.css";
 import NavLink, { NavLinkProps } from "./NavLink";
+import { CSSProperties } from "react";
 
 type Props = {
   className?: string;
+  colorScheme?: string;
+  style?: CSSProperties;
 };
 
 export default function NavList(props: Props) {
@@ -21,9 +24,8 @@ export default function NavList(props: Props) {
       active: isActive("/suggest"),
     },
     {
-      label: "Acerda de",
-      href: "/",
-      active: isActive("/product/[id]"),
+      label: "Acerca de",
+      href: "/#about",
     },
   ];
 
@@ -32,12 +34,16 @@ export default function NavList(props: Props) {
   }
   return (
     <>
-      <Group className={`${styles.navGroup} ${props.className}`}>
+      <Group
+        className={`${styles.navGroup} ${props.className}`}
+        style={props.style}
+      >
         {linkList.map((link, index) => (
           <NavLink
             label={link.label}
             href={link.href}
             active={link.active}
+            colorScheme={props.colorScheme}
             key={index}
           />
         ))}
