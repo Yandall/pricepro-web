@@ -199,7 +199,7 @@ function Content() {
               {data &&
                 data.items.length > 0 &&
                 data.items.map((item, index) => (
-                  <Grid.Col key={item.id} span={12} lg={3} xl={2}>
+                  <Grid.Col key={item.id} span={12} xs={6} lg={3} xl={2}>
                     <ItemCard
                       data={item}
                       position={index + 1}
