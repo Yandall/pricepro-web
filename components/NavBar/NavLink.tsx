@@ -6,14 +6,21 @@ export type NavLinkProps = {
   label: string;
   href: string;
   active?: boolean;
+  colorScheme?: string;
 };
 
-export default function NavLink({ label, href, active }: NavLinkProps) {
+export default function NavLink({
+  label,
+  href,
+  active,
+  colorScheme,
+}: NavLinkProps) {
   return (
     <Text
       component={Link}
       href={href}
-      className={`${styles.navLink} ${active ? styles.active : ""}`}
+      className={`${colorScheme === "dark" ? styles.darkBorderColor : ""} 
+      ${styles.navLink} ${active ? styles.active : ""}`}
     >
       {label}
     </Text>

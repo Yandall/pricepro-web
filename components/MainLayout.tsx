@@ -4,10 +4,8 @@ import {
   Group,
   Header,
   MediaQuery,
-  Navbar,
   Text,
   TextInput,
-  Title,
   useMantineTheme,
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
@@ -16,7 +14,9 @@ import { useForm } from "@mantine/form";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import NavList from "./NavBar/NavList";
+import NavBar from "./NavBar/NavBar";
 import ColorSchemeToggle from "./ColorSchemeToggle";
+import MainFooter from "./Footer";
 
 export default function MainLayout({ children }: { children: ReactElement }) {
   const router = useRouter();
@@ -77,6 +77,10 @@ export default function MainLayout({ children }: { children: ReactElement }) {
             style={{
               height: "var(--mantine-header-height)",
               maxHeight: "var(--mantine-header-height)",
+              backgroundColor:
+                theme.colorScheme === "light"
+                  ? "var(--mantine-color-lime-4)"
+                  : "",
             }}
           >
             <Group position="apart">
@@ -101,7 +105,7 @@ export default function MainLayout({ children }: { children: ReactElement }) {
                 PricePro
               </Text>
               <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
-                <NavList />
+                <NavList colorScheme={theme.colorScheme} />
               </MediaQuery>
               <Group
                 noWrap
@@ -135,15 +139,14 @@ export default function MainLayout({ children }: { children: ReactElement }) {
           </Header>
         }
         navbar={
-          <Navbar
+          <NavBar
             width={{ sm: 200, lg: 300 }}
             p="md"
             hidden={!opened}
             hiddenBreakpoint="sm"
-          >
-            <Title order={3}>Categorías</Title>
-          </Navbar>
+          />
         }
+        footer={<MainFooter />}
       >
         {children}
       </AppShell>
