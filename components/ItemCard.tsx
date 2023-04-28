@@ -14,13 +14,17 @@ export type Item = {
   store: { name: string };
 };
 
+export type Props = {
+  data: Item;
+  position: number;
+  orderBy: "pricePerUnit" | "price";
+};
+
 export default function ItemCard({
   data,
   position,
-}: {
-  data: Item;
-  position: number;
-}) {
+  orderBy = "pricePerUnit",
+}: Props) {
   return (
     <Card h="100%" style={{ display: "flex", flexDirection: "column" }}>
       <Card.Section>
@@ -53,11 +57,19 @@ export default function ItemCard({
           <Text weight={200} size="sm">
             Cantidad: {data.quantity} {data.product.units}
           </Text>
-          <Text>Precio: ${data.price}</Text>
-          <Text>Precio por unidad:</Text>
+          <Text>
+            {orderBy === "pricePerUnit"
+              ? `Precio: $${data.price}`
+              : `Precio por ${data.product.units}: $${data.pricePerUnit}`}
+          </Text>
+          <Text>
+            {orderBy === "pricePerUnit"
+              ? `Precio por ${data.product.units}:`
+              : "Precio:"}
+          </Text>
         </div>
         <Badge size="lg" color="yellow">
-          ${data.pricePerUnit}
+          ${orderBy === "pricePerUnit" ? data.pricePerUnit : data.price}
         </Badge>
       </Flex>
     </Card>

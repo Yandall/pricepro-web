@@ -18,7 +18,7 @@ import {
   Title,
 } from "@mantine/core";
 import { IconShare } from "@tabler/icons-react";
-import ItemCard, { Item } from "@/components/ItemCard";
+import ItemCard, { Item, Props as ItemProps } from "@/components/ItemCard";
 import { useClipboard } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { NextPageContext } from "next";
@@ -121,7 +121,7 @@ function Content() {
                       </ActionIcon>
                     </Popover.Target>
                     <Popover.Dropdown>
-                      <Text>Copiado</Text>
+                      <Text>Enlace copiado!</Text>
                     </Popover.Dropdown>
                   </Popover>
                   <MediaQuery largerThan="md" styles={{ display: "none" }}>
@@ -199,8 +199,12 @@ function Content() {
               {data &&
                 data.items.length > 0 &&
                 data.items.map((item, index) => (
-                  <Grid.Col key={item.id} span={6} lg={3} xl={2}>
-                    <ItemCard data={item} position={index + 1} />
+                  <Grid.Col key={item.id} span={12} lg={3} xl={2}>
+                    <ItemCard
+                      data={item}
+                      position={index + 1}
+                      orderBy={order as ItemProps["orderBy"]}
+                    />
                   </Grid.Col>
                 ))}
             </Grid>
