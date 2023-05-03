@@ -23,7 +23,7 @@ export default function ProductCard({ data }: { data: Product }) {
       style={{ display: "flex", flexDirection: "column" }}
     >
       <Card.Section style={{ flex: "1 1 60%" }} pos="relative">
-        <Link href={`/product/${data.id}`}>
+        <Link href={`/product/${data.id}-${data.name}`}>
           <Image
             src={data.imgUrl !== "" ? data.imgUrl : undefined}
             alt={data.name}
@@ -45,7 +45,11 @@ export default function ProductCard({ data }: { data: Product }) {
       </Card.Section>
       <Container m={0} px={0} style={{ flex: "1 1 40%" }}>
         <Group position="apart" mt="md" mb="s">
-          <Text weight={700} component={Link} href={`/product/${data.id}`}>
+          <Text
+            weight={700}
+            component={Link}
+            href={`/product/${data.id}-${data.name}`}
+          >
             {data.name}
           </Text>
 

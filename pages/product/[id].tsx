@@ -48,9 +48,9 @@ const fetcher = (url: string) => {
 function Content() {
   const apiHost = process.env.NEXT_PUBLIC_API_HOST;
   const router = useRouter();
-  const { id: idProduct } = router.query;
+  let { id: idProduct } = router.query;
+  idProduct = (idProduct as string).split("-")[0];
   let url = idProduct ? `${apiHost}items/${idProduct}` : "";
-
   const { data, mutate } = useSWR<ResponseData>(url, fetcher);
   const [order, setOrder] = useState<string | null>("pricePerUnit");
   const { items } = data?.items ? data : { items: new Array<Item>() };
@@ -230,7 +230,8 @@ const Page: NextPageWithLayout<{
 Page.getLayout = getLayout;
 
 Page.getInitialProps = async (ctx: NextPageContext) => {
-  const { id: idProduct } = ctx.query;
+  let { id: idProduct } = ctx.query;
+  idProduct = (idProduct as string).split("-")[0];
   const apiHost = process.env.NEXT_PUBLIC_API_HOST;
   const url = `${apiHost}items/${idProduct}`;
   var res: ResponseData;
