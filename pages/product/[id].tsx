@@ -17,18 +17,20 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { IconShare } from "@tabler/icons-react";
+import { IconCheck, IconShare } from "@tabler/icons-react";
 import ItemCard, { Item, Props as ItemProps } from "@/components/ItemCard";
 import { useClipboard } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { NextPageContext } from "next";
 import Head from "next/head";
 import PlaceholderImg from "@/components/PlaceHolderImg";
+import { notifications } from "@mantine/notifications";
 
 type ResponseData =
   | {
       product: Product;
       items: Item[];
+      updating: boolean;
     }
   | undefined;
 
@@ -53,24 +55,34 @@ function Content() {
   let url = idProduct ? `${apiHost}items/${idProduct}` : "";
   const { data, mutate } = useSWR<ResponseData>(url, fetcher);
   const [order, setOrder] = useState<string | null>("pricePerUnit");
-  const { items } = data?.items ? data : { items: new Array<Item>() };
-  useEffect(() => {
-    if (order === "pricePerUnit" && items.length > 0) {
-      mutate({
-        ...data!,
-        items: Array.from(
-          items.sort((prev, next) => prev.pricePerUnit - next.pricePerUnit)
-        ),
-      });
-    } else if (order === "price" && items.length > 0) {
-      mutate({
-        ...data!,
-        items: Array.from(items.sort((prev, next) => prev.price - next.price)),
-      });
-    }
-  }, [order, items, data, mutate]);
-
   const clipboard = useClipboard();
+
+  useEffect(() => {
+    if (data?.updating) {
+      notifications.show({
+        id: "updating-data",
+        title: "Actualizando producto",
+        message: "Datos actualizados en aproximadamente un minuto",
+        loading: true,
+        autoClose: false,
+        withCloseButton: false,
+      });
+
+      setTimeout(() => {
+        notifications.update({
+          id: "updating-data",
+          color: "teal",
+          title: "¡Producto actualizado!",
+          message:
+            "Se actualizaron los datos del producto. Ya puedes cerrar esta notificación",
+          icon: <IconCheck />,
+          autoClose: 5000,
+        });
+        mutate({ ...data, updating: false });
+      }, 6 * 1000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function clipboardHandler() {
     let copyUrl = window.location.href;
@@ -81,6 +93,16 @@ function Content() {
     if (!list) return;
     return list[list.length - 1];
   }
+
+  function sort(list: Item[], orderBy: string) {
+    if (orderBy === "pricePerUnit" && list.length > 0) {
+      return list.sort((prev, next) => prev.pricePerUnit - next.pricePerUnit);
+    } else if (orderBy === "price" && list.length > 0) {
+      return list.sort((prev, next) => prev.price - next.price);
+    }
+    return list;
+  }
+
   return (
     <>
       <Head>
@@ -198,7 +220,7 @@ function Content() {
             <Grid m="1.2rem">
               {data &&
                 data.items.length > 0 &&
-                data.items.map((item, index) => (
+                sort(data.items, order!).map((item, index) => (
                   <Grid.Col key={item.id} span={12} xs={6} lg={3} xl={2}>
                     <ItemCard
                       data={item}
