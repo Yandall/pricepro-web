@@ -17,6 +17,7 @@
 }
 
 .darkBgColor {
+  border-top: 1px solid var(--mantine-color-dark-4);
   background-color: #141517;
 }
 
