@@ -144,6 +144,7 @@ export default function MainLayout({ children }: { children: ReactElement }) {
             p="md"
             hidden={!opened}
             hiddenBreakpoint="sm"
+            style={{ overflow: "auto" }}
           />
         }
         footer={<MainFooter />}
