@@ -79,7 +79,7 @@ function Content() {
           autoClose: 5000,
         });
         mutate({ ...data, updating: false });
-      }, 6 * 1000);
+      }, 60 * 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -131,19 +131,20 @@ function Content() {
                       <ActionIcon
                         size="lg"
                         variant="outline"
-                        color="dark"
+                        color="teal"
                         radius="xl"
                         style={{
                           position: "absolute",
                           margin: "1rem",
                           zIndex: 2,
+                          borderWidth: "2px",
                         }}
                       >
                         <IconShare stroke={2} />
                       </ActionIcon>
                     </Popover.Target>
                     <Popover.Dropdown>
-                      <Text>Enlace copiado!</Text>
+                      <Text>¡Enlace copiado!</Text>
                     </Popover.Dropdown>
                   </Popover>
                   <MediaQuery largerThan="md" styles={{ display: "none" }}>
