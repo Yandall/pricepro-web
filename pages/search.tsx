@@ -2,24 +2,13 @@ import { useRouter } from "next/router";
 import { NextPageWithLayout } from "./_app";
 import { getLayout } from "@/components/MainLayout";
 import { Flex, Grid, Loader, Pagination, Text } from "@mantine/core";
-import ProductCard, { Product } from "@/components/ProductCard";
+import ProductCard from "@/components/ProductCard";
 import useSWR, { SWRConfig } from "swr";
 import { NextPageContext } from "next";
 import Head from "next/head";
 import Link from "next/link";
-
-const fetcher = (url: string) => {
-  if (url !== "")
-    return fetch(url)
-      .then(async (res) => {
-        return res.json();
-      })
-      .then((res) => {
-        if (res.error) throw res;
-        return res;
-      });
-  return new Promise<any>((resolve) => resolve(undefined));
-};
+import { fetcher } from "@/utils/fetcher";
+import type { Product } from "@/utils/types";
 
 type ResponseData =
   | { list: Product[]; metadata: { total: number; pages: number } }

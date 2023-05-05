@@ -1,18 +1,5 @@
 import { Badge, Card, Flex, Image, Text } from "@mantine/core";
-import { Product } from "./ProductCard";
-
-export type Item = {
-  id: number;
-  name: string;
-  url: string;
-  imageUrl: string;
-  price: number;
-  pricePerUnit: number;
-  quantity: number;
-  product: Product;
-  brand: { name: string };
-  store: { name: string };
-};
+import type { Item } from "@/utils/types";
 
 export type Props = {
   data: Item;

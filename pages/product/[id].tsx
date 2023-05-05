@@ -1,7 +1,6 @@
 import { getLayout } from "@/components/MainLayout";
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
-import { Product } from "@/components/ProductCard";
 import useSWR, { SWRConfig } from "swr";
 import {
   ActionIcon,
@@ -18,13 +17,15 @@ import {
   Title,
 } from "@mantine/core";
 import { IconCheck, IconShare } from "@tabler/icons-react";
-import ItemCard, { Item, Props as ItemProps } from "@/components/ItemCard";
+import ItemCard, { Props as ItemProps } from "@/components/ItemCard";
 import { useClipboard } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { NextPageContext } from "next";
 import Head from "next/head";
 import PlaceholderImg from "@/components/PlaceHolderImg";
 import { notifications } from "@mantine/notifications";
+import { fetcher } from "@/utils/fetcher";
+import type { Product, Item } from "@/utils/types";
 
 type ResponseData =
   | {
@@ -33,19 +34,6 @@ type ResponseData =
       updating: boolean;
     }
   | undefined;
-
-const fetcher = (url: string) => {
-  if (url !== "")
-    return fetch(url)
-      .then(async (res) => {
-        return res.json();
-      })
-      .then((res) => {
-        if (res.error) throw res;
-        return res;
-      });
-  return new Promise<any>((resolve) => resolve(undefined));
-};
 
 function Content() {
   const apiHost = process.env.NEXT_PUBLIC_API_HOST;

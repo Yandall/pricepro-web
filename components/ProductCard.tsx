@@ -1,15 +1,7 @@
 import { Badge, Card, Container, Group, Image, Text } from "@mantine/core";
 import Link from "next/link";
 import PlaceholderImg from "./PlaceHolderImg";
-
-export type Product = {
-  id: number;
-  name: string;
-  description: string;
-  units: string;
-  subcategory: { name: string };
-  imgUrl: string;
-};
+import type { Product } from "@/utils/types";
 
 export default function ProductCard({ data }: { data: Product }) {
   return (

@@ -7,7 +7,7 @@ import {
   Title,
 } from "@mantine/core";
 import useSWRImmutable from "swr/immutable";
-import { Subcategory, Category } from "@/utils/types";
+import type { Subcategory, Category } from "@/utils/types";
 import { fetcher } from "@/utils/fetcher";
 
 export default function NavBar(props: Omit<NavbarProps, "children">) {
@@ -31,30 +31,28 @@ export default function NavBar(props: Omit<NavbarProps, "children">) {
     ),
   }));
   return (
-    <>
-      <Navbar {...props}>
-        <Title order={3} mb="1rem">
-          Categorías
-        </Title>
-        <Accordion>
-          {categoryList &&
-            categoryList.length > 0 &&
-            categoryList.map((category) => (
-              <Accordion.Item value={category.name} key={category.id}>
-                <Accordion.Control>{category.name}</Accordion.Control>
-                <Accordion.Panel>
-                  <Flex wrap="wrap" gap="sm">
-                    {category.subcategories?.map((subcategory) => (
-                      <Badge color="teal" key={subcategory.id}>
-                        {subcategory.name}
-                      </Badge>
-                    ))}
-                  </Flex>
-                </Accordion.Panel>
-              </Accordion.Item>
-            ))}
-        </Accordion>
-      </Navbar>
-    </>
+    <Navbar {...props}>
+      <Title order={3} mb="1rem">
+        Categorías
+      </Title>
+      <Accordion>
+        {categoryList &&
+          categoryList.length > 0 &&
+          categoryList.map((category) => (
+            <Accordion.Item value={category.name} key={category.id}>
+              <Accordion.Control>{category.name}</Accordion.Control>
+              <Accordion.Panel>
+                <Flex wrap="wrap" gap="sm">
+                  {category.subcategories?.map((subcategory) => (
+                    <Badge color="teal" key={subcategory.id}>
+                      {subcategory.name}
+                    </Badge>
+                  ))}
+                </Flex>
+              </Accordion.Panel>
+            </Accordion.Item>
+          ))}
+      </Accordion>
+    </Navbar>
   );
 }

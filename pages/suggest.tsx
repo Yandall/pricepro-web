@@ -18,22 +18,14 @@ import { useForm } from "@mantine/form";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
-import { Product } from "@/components/ProductCard";
 import { useDebouncedValue } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconUpload, IconX } from "@tabler/icons-react";
 import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { fetcher } from "@/utils/fetcher";
+import type { Suggestion, Subcategory, Product } from "@/utils/types";
 
-type Subcategory = {
-  name: string;
-  id: number;
-  category: { name: string; id: number };
-};
-
-type Suggestion = {
-  name: string;
-  description: string;
-  units: string;
+type SuggestionDTO = Omit<Suggestion, "subcategory" | "exampleUrl"> & {
   subcategory: string;
   exampleUrl: string;
   imgBuffer?: FileWithPath;
@@ -52,9 +44,7 @@ function getAutocompleteData(data?: { list: Product[] | Subcategory[] }) {
   return data?.list.map((p) => p.name) || [];
 }
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
-async function insertSuggestion(url: string, { arg }: { arg: Suggestion }) {
+async function insertSuggestion(url: string, { arg }: { arg: SuggestionDTO }) {
   let formdata = new FormData();
   formdata.append("name", arg.name);
   formdata.append("description", arg.description);
@@ -71,7 +61,7 @@ async function insertSuggestion(url: string, { arg }: { arg: Suggestion }) {
 
 export default function Page() {
   const apiHost = process.env.NEXT_PUBLIC_API_HOST;
-  const form = useForm<Suggestion>({
+  const form = useForm<SuggestionDTO>({
     initialValues: {
       name: "",
       description: "",
@@ -113,7 +103,7 @@ export default function Page() {
     setProductUrl(`${apiHost}products/search?search=${productQuery}`);
   }, [productQuery, apiHost]);
 
-  async function submitSuggestion(values: Suggestion) {
+  async function submitSuggestion(values: SuggestionDTO) {
     if (form.validate().hasErrors) return;
     const subcategoryId =
       subcategoryData?.list.find((s) => s.name === values.subcategory)?.id +
