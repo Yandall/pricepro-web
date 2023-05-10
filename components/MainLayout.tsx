@@ -43,9 +43,14 @@ export default function MainLayout({ children }: { children: ReactElement }) {
   }, [setOpened, route]);
 
   function searchHandler(data: { query: string }) {
-    if (data.query?.trim() !== "") {
-      router.push(`/search?q=${data.query}`);
-    } else router.push(`/search`);
+    let path = `/search`;
+    if (data.query?.trim() !== "") path += `?q=${data.query}`;
+    if (router.query.subcategory) {
+      if (path.includes("?")) path += "&";
+      else path += "?";
+      path += `subcategory=${router.query.subcategory}`;
+    }
+    router.push(path);
   }
 
   return (

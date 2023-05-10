@@ -9,6 +9,7 @@ import {
 import useSWRImmutable from "swr/immutable";
 import type { Subcategory, Category } from "@/utils/types";
 import { fetcher } from "@/utils/fetcher";
+import Link from "next/link";
 
 export default function NavBar(props: Omit<NavbarProps, "children">) {
   const apiHost = process.env.NEXT_PUBLIC_API_HOST;
@@ -23,6 +24,12 @@ export default function NavBar(props: Omit<NavbarProps, "children">) {
     urlCategory,
     fetcher
   );
+
+  dataSubcategory &&
+    localStorage.setItem(
+      "subcategoryList",
+      JSON.stringify(dataSubcategory.list)
+    );
 
   const categoryList = dataCategory?.list.map((category) => ({
     ...category,
@@ -44,7 +51,13 @@ export default function NavBar(props: Omit<NavbarProps, "children">) {
               <Accordion.Panel>
                 <Flex wrap="wrap" gap="sm">
                   {category.subcategories?.map((subcategory) => (
-                    <Badge color="teal" key={subcategory.id}>
+                    <Badge
+                      color="teal"
+                      key={subcategory.id}
+                      component={Link}
+                      href={`/search?subcategory=${subcategory.id}`}
+                      style={{ cursor: "pointer" }}
+                    >
                       {subcategory.name}
                     </Badge>
                   ))}

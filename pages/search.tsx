@@ -1,14 +1,25 @@
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "./_app";
 import { getLayout } from "@/components/MainLayout";
-import { Flex, Grid, Loader, Pagination, Text } from "@mantine/core";
+import {
+  ActionIcon,
+  Badge,
+  Flex,
+  Grid,
+  Loader,
+  Pagination,
+  Text,
+} from "@mantine/core";
 import ProductCard from "@/components/ProductCard";
-import useSWR, { SWRConfig } from "swr";
+import { SWRConfig } from "swr";
+import useSWRImmutable from "swr/immutable";
 import { NextPageContext } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { fetcher } from "@/utils/fetcher";
-import type { Product } from "@/utils/types";
+import type { Product, Subcategory } from "@/utils/types";
+import { useLocalStorage } from "@mantine/hooks";
+import { IconX } from "@tabler/icons-react";
 
 type ResponseData =
   | { list: Product[]; metadata: { total: number; pages: number } }
@@ -18,19 +29,27 @@ function Content() {
   const router = useRouter();
   const apiHost = process.env.NEXT_PUBLIC_API_HOST;
   const query = router.query;
-  let url = `${apiHost}products/search?search=`;
-  if (query.q && query.q !== "") {
-    url += query.q;
-  }
+  let pageQuery = `&page=${Number(query.page) > 0 ? query.page : 1}`;
+  let subcategoryQuery = query.subcategory
+    ? `&subcategory=${query.subcategory}`
+    : "";
+  let url = `${apiHost}products/search?search=${
+    query.q || ""
+  }${pageQuery}${subcategoryQuery}`;
 
-  if (query.page && query.page !== "") {
-    url += +query.page > 0 ? `&page=${query.page}` : `&page=1`;
-  }
+  const { data, isLoading } = useSWRImmutable<ResponseData>(url, fetcher);
+
+  const [subcategoryList] = useLocalStorage<Subcategory[]>({
+    key: "subcategoryList",
+  });
+  const subcategorySelected = subcategoryList?.find(
+    (s) => s.id === Number(query.subcategory)
+  );
+
   function getPaginationUrl(page: number) {
     if (query.q && query.q !== "") return `?q=${query.q}&page=${page}`;
     return `?page=${page}`;
   }
-  const { data, isLoading } = useSWR<ResponseData>(url, fetcher);
   return (
     <>
       <Head>
@@ -47,6 +66,30 @@ function Content() {
           {isLoading && (
             <Grid.Col span={12} style={{ textAlign: "center" }}>
               <Loader size="xl" />
+            </Grid.Col>
+          )}
+
+          {subcategorySelected && (
+            <Grid.Col span={12}>
+              <Badge
+                size="xl"
+                variant="filled"
+                color="teal"
+                pr={3}
+                rightSection={
+                  <ActionIcon
+                    size="md"
+                    radius="xl"
+                    variant="transparent"
+                    c="white"
+                    onClick={() => router.push("/search")}
+                  >
+                    <IconX></IconX>
+                  </ActionIcon>
+                }
+              >
+                {subcategorySelected.category.name} - {subcategorySelected.name}
+              </Badge>
             </Grid.Col>
           )}
           {data &&
@@ -112,11 +155,14 @@ const Page: NextPageWithLayout<{
 Page.getLayout = getLayout;
 
 Page.getInitialProps = async (ctx: NextPageContext) => {
-  const { q: searchQuery, page } = ctx.query;
+  const { q: searchQuery, page, subcategory } = ctx.query;
   const apiHost = process.env.NEXT_PUBLIC_API_HOST;
-  let url = `${apiHost}products/search?search=${searchQuery || ""}&page=`;
-  url += Number(page) > 0 ? page : 1;
-  var res: ResponseData;
+  let pageQuery = `&page=${Number(page) > 0 ? page : 1}`;
+  let subcategoryQuery = subcategory ? `&subcategory=${subcategory}` : "";
+  let url = `${apiHost}products/search?search=${
+    searchQuery || ""
+  }${pageQuery}${subcategoryQuery}`;
+  let res: ResponseData;
   try {
     res = await fetcher(url);
   } catch (error) {
