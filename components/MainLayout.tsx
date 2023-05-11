@@ -1,5 +1,6 @@
 import {
   AppShell,
+  Badge,
   Burger,
   Group,
   Header,
@@ -107,7 +108,14 @@ export default function MainLayout({ children }: { children: ReactElement }) {
                 component={Link}
                 href="/"
               >
-                PricePro
+                PricePro{" "}
+                <Badge
+                  variant="gradient"
+                  gradient={{ from: "orange", to: "red", deg: 105 }}
+                  style={{ verticalAlign: "middle" }}
+                >
+                  Beta
+                </Badge>
               </Text>
               <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
                 <NavList colorScheme={theme.colorScheme} />
