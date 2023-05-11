@@ -54,6 +54,14 @@ function Content() {
     <>
       <Head>
         <title>{`${query.q || "Productos"} - PricePro`}</title>
+        <meta
+          name="description"
+          content="Buscador de productos. Encuentra el precio más barato en diferentes tiendas del país"
+        />
+        <meta
+          property="og:title"
+          content={`${query.q || "Productos"} - PricePro`}
+        />
       </Head>
       <Flex
         miw={300}

@@ -24,6 +24,7 @@ import { IconCheck, IconUpload, IconX } from "@tabler/icons-react";
 import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { fetcher } from "@/utils/fetcher";
 import type { Suggestion, Subcategory, Product } from "@/utils/types";
+import Head from "next/head";
 
 type SuggestionDTO = Omit<Suggestion, "subcategory" | "exampleUrl"> & {
   subcategory: string;
@@ -145,109 +146,114 @@ export default function Page() {
   }
 
   return (
-    <Grid justify="center" pt={20}>
-      <Grid.Col span={11} md={8}>
-        <Title order={1} mb={20}>
-          Sugerir un producto
-        </Title>
-        <Text>
-          Llena el formulario para sugerir un producto que pienses que debería
-          estar en nuestra lista.
-        </Text>
-        <Text>
-          Tu sugerencia será revisada y si cumple con nuestras condiciones la
-          añadiremos a la lista de <b>Productos</b>.
-        </Text>
-        <Text>
-          Las condiciones para que tu sugerencia sea aceptada son las
-          siguientes:
-        </Text>
-        <List>
-          <List.Item>
-            Debe ser un producto que ya no esté en nuestra lista (el
-            autocompletador te ayudará a verificar que no exista)
-          </List.Item>
-          <List.Item>
-            El producto debe tener unidad (gr, ml) para poder ser ordenado
-          </List.Item>
-          <List.Item>
-            El producto debe existir en al menos tres tiendas que esten listadas
-            en <b>PricePro</b>
-          </List.Item>
-        </List>
-        <Card mx="auto" mt={30} style={{ overflow: "auto" }}>
-          <form onSubmit={form.onSubmit(submitSuggestion)}>
-            <Autocomplete
-              label="Producto"
-              withAsterisk
-              placeholder="Arroz blanco"
-              mb={20}
-              data={getAutocompleteData(productData)}
-              {...form.getInputProps("name")}
-            />
-            <Textarea
-              label="Descripción"
-              withAsterisk
-              placeholder="El arroz es un cereal rico en carbohidratos y su principal beneficio para la salud es aportarle energía al organismo. Además de esto, también contiene aminoácidos, vitaminas y minerales esenciales para el funcionamiento del cuerpo."
-              mb={20}
-              {...form.getInputProps("description")}
-            />
-            <Select
-              label="Unidades"
-              withAsterisk
-              placeholder="Gramos"
-              data={[
-                { value: "gr", label: "Gramos" },
-                { value: "ml", label: "Mililitros" },
-              ]}
-              mb={20}
-              {...form.getInputProps("units")}
-            />
-            <Autocomplete
-              label="Subcategoría"
-              placeholder="Granos"
-              withAsterisk
-              data={getAutocompleteData(subcategoryData)}
-              dropdownPosition="bottom"
-              mb={20}
-              {...form.getInputProps("subcategory")}
-            />
-            <TextInput
-              label="Url ejemplo"
-              placeholder="https://www.exito.com/arroz-blanco-arroba-12500-gr-61887/p"
-              mb={20}
-              {...form.getInputProps("exampleUrl")}
-            />
-            <Dropzone
-              accept={IMAGE_MIME_TYPE}
-              onDrop={(file) => setImgFile(file[0])}
-              maxFiles={1}
-              maxSize={3 * 1024 ** 2}
-            >
-              <Group position="center" spacing="xl">
-                <IconUpload />
-                Sube una imagen
-              </Group>
-            </Dropzone>
-            {imgFile && (
-              <SimpleGrid
-                cols={4}
-                breakpoints={[{ maxWidth: "sm", cols: 1 }]}
-                mt="xl"
+    <>
+      <Head>
+        <title>Sugerir producto | PricePro</title>
+      </Head>
+      <Grid justify="center" pt={20}>
+        <Grid.Col span={11} md={8}>
+          <Title order={1} mb={20}>
+            Sugerir un producto
+          </Title>
+          <Text>
+            Llena el formulario para sugerir un producto que pienses que debería
+            estar en nuestra lista.
+          </Text>
+          <Text>
+            Tu sugerencia será revisada y si cumple con nuestras condiciones la
+            añadiremos a la lista de <b>Productos</b>.
+          </Text>
+          <Text>
+            Las condiciones para que tu sugerencia sea aceptada son las
+            siguientes:
+          </Text>
+          <List>
+            <List.Item>
+              Debe ser un producto que ya no esté en nuestra lista (el
+              autocompletador te ayudará a verificar que no exista)
+            </List.Item>
+            <List.Item>
+              El producto debe tener unidad (gr, ml) para poder ser ordenado
+            </List.Item>
+            <List.Item>
+              El producto debe existir en al menos tres tiendas que esten
+              listadas en <b>PricePro</b>
+            </List.Item>
+          </List>
+          <Card mx="auto" mt={30} style={{ overflow: "auto" }}>
+            <form onSubmit={form.onSubmit(submitSuggestion)}>
+              <Autocomplete
+                label="Producto"
+                withAsterisk
+                placeholder="Arroz blanco"
+                mb={20}
+                data={getAutocompleteData(productData)}
+                {...form.getInputProps("name")}
+              />
+              <Textarea
+                label="Descripción"
+                withAsterisk
+                placeholder="El arroz es un cereal rico en carbohidratos y su principal beneficio para la salud es aportarle energía al organismo. Además de esto, también contiene aminoácidos, vitaminas y minerales esenciales para el funcionamiento del cuerpo."
+                mb={20}
+                {...form.getInputProps("description")}
+              />
+              <Select
+                label="Unidades"
+                withAsterisk
+                placeholder="Gramos"
+                data={[
+                  { value: "gr", label: "Gramos" },
+                  { value: "ml", label: "Mililitros" },
+                ]}
+                mb={20}
+                {...form.getInputProps("units")}
+              />
+              <Autocomplete
+                label="Subcategoría"
+                placeholder="Granos"
+                withAsterisk
+                data={getAutocompleteData(subcategoryData)}
+                dropdownPosition="bottom"
+                mb={20}
+                {...form.getInputProps("subcategory")}
+              />
+              <TextInput
+                label="Url ejemplo"
+                placeholder="https://www.exito.com/arroz-blanco-arroba-12500-gr-61887/p"
+                mb={20}
+                {...form.getInputProps("exampleUrl")}
+              />
+              <Dropzone
+                accept={IMAGE_MIME_TYPE}
+                onDrop={(file) => setImgFile(file[0])}
+                maxFiles={1}
+                maxSize={3 * 1024 ** 2}
               >
-                <Image
-                  src={URL.createObjectURL(imgFile)}
-                  alt={form.values.name}
-                />
-              </SimpleGrid>
-            )}
-            <Group position="right" mt="md">
-              <Button type="submit">Enviar</Button>
-            </Group>
-          </form>
-        </Card>
-      </Grid.Col>
-    </Grid>
+                <Group position="center" spacing="xl">
+                  <IconUpload />
+                  Sube una imagen
+                </Group>
+              </Dropzone>
+              {imgFile && (
+                <SimpleGrid
+                  cols={4}
+                  breakpoints={[{ maxWidth: "sm", cols: 1 }]}
+                  mt="xl"
+                >
+                  <Image
+                    src={URL.createObjectURL(imgFile)}
+                    alt={form.values.name}
+                  />
+                </SimpleGrid>
+              )}
+              <Group position="right" mt="md">
+                <Button type="submit">Enviar</Button>
+              </Group>
+            </form>
+          </Card>
+        </Grid.Col>
+      </Grid>
+    </>
   );
 }
 

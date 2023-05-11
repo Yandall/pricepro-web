@@ -95,9 +95,30 @@ function Content() {
     <>
       <Head>
         {data ? (
-          <title>{`${data.product.name} - PricePro`}</title>
+          <>
+            <title>{`${data.product.name} - PricePro`}</title>
+            <meta
+              property="og:title"
+              content={`${data.product.name} - PricePro`}
+            />
+            <meta
+              name="description"
+              content={`Encuentra los precios más baratos de ${data.product.name} en PricePro`}
+            />
+            <meta
+              name="og:description"
+              content={`Encuentra los precios más baratos de ${data.product.name} en PricePro`}
+            />
+            <meta property="og:image" content={`${data.product.imgUrl}.jpg`} />
+          </>
         ) : (
-          <title>Producto no encontrado - PricePro</title>
+          <>
+            <title>Producto no encontrado - PricePro</title>
+            <meta
+              property="og:title"
+              content="Producto no encontrado - Pricepro"
+            />
+          </>
         )}
       </Head>
       <Flex direction="column" align="center" mt={10}>
