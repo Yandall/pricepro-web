@@ -2,8 +2,6 @@
   padding-inline: 5rem;
   padding-block: 2rem;
   background-color: #f8f9fa;
-  display: flex;
-  flex-wrap: nowrap;
   position: relative;
   z-index: 100;
 }

@@ -75,6 +75,11 @@
   height: 2rem;
 }
 
+.promotionImg {
+  height: auto;
+  max-width: 640px;
+}
+
 .infoSectionContainer {
   margin-top: 5rem;
   padding-inline: 5rem;
@@ -94,6 +99,10 @@
 
   .infoSectionContainer {
     padding-inline: 2rem;
+  }
+
+  .promotionImg {
+    max-width: 100%;
   }
 }
 
