@@ -1,7 +1,6 @@
 import { getLayout } from "@/components/MainLayout";
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
-import { Product } from "@/components/ProductCard";
 import useSWR, { SWRConfig } from "swr";
 import {
   ActionIcon,
@@ -17,60 +16,61 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { IconShare } from "@tabler/icons-react";
-import ItemCard, { Item } from "@/components/ItemCard";
+import { IconCheck, IconShare } from "@tabler/icons-react";
+import ItemCard, { Props as ItemProps } from "@/components/ItemCard";
 import { useClipboard } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { NextPageContext } from "next";
 import Head from "next/head";
 import PlaceholderImg from "@/components/PlaceHolderImg";
+import { notifications } from "@mantine/notifications";
+import { fetcher } from "@/utils/fetcher";
+import type { Product, Item } from "@/utils/types";
 
 type ResponseData =
   | {
       product: Product;
       items: Item[];
+      updating: boolean;
     }
   | undefined;
-
-const fetcher = (url: string) => {
-  if (url !== "")
-    return fetch(url)
-      .then(async (res) => {
-        return res.json();
-      })
-      .then((res) => {
-        if (res.error) throw res;
-        return res;
-      });
-  return new Promise<any>((resolve) => resolve(undefined));
-};
 
 function Content() {
   const apiHost = process.env.NEXT_PUBLIC_API_HOST;
   const router = useRouter();
-  const { id: idProduct } = router.query;
+  let { id: idProduct } = router.query;
+  idProduct = (idProduct as string).split("-")[0];
   let url = idProduct ? `${apiHost}items/${idProduct}` : "";
-
   const { data, mutate } = useSWR<ResponseData>(url, fetcher);
   const [order, setOrder] = useState<string | null>("pricePerUnit");
-  const { items } = data?.items ? data : { items: new Array<Item>() };
-  useEffect(() => {
-    if (order === "pricePerUnit" && items.length > 0) {
-      mutate({
-        ...data!,
-        items: Array.from(
-          items.sort((prev, next) => prev.pricePerUnit - next.pricePerUnit)
-        ),
-      });
-    } else if (order === "price" && items.length > 0) {
-      mutate({
-        ...data!,
-        items: Array.from(items.sort((prev, next) => prev.price - next.price)),
-      });
-    }
-  }, [order, items, data, mutate]);
-
   const clipboard = useClipboard();
+
+  useEffect(() => {
+    if (data?.updating) {
+      notifications.show({
+        id: "updating-data",
+        title: "Actualizando producto",
+        message: "Datos actualizados en aproximadamente un minuto",
+        loading: true,
+        autoClose: false,
+        withCloseButton: false,
+      });
+
+      setTimeout(() => {
+        notifications.update({
+          id: "updating-data",
+          color: "teal",
+          title: "¡Producto actualizado!",
+          message:
+            "Se actualizaron los datos del producto. Ya puedes cerrar esta notificación",
+          icon: <IconCheck />,
+          autoClose: 5000,
+        });
+        mutate({ ...data, updating: false });
+      }, 60 * 1000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function clipboardHandler() {
     let copyUrl = window.location.href;
@@ -81,13 +81,53 @@ function Content() {
     if (!list) return;
     return list[list.length - 1];
   }
+
+  function sort(list: Item[], orderBy: string) {
+    if (orderBy === "pricePerUnit" && list.length > 0) {
+      return list.sort((prev, next) => prev.pricePerUnit - next.pricePerUnit);
+    } else if (orderBy === "price" && list.length > 0) {
+      return list.sort((prev, next) => prev.price - next.price);
+    }
+    return list;
+  }
+
   return (
     <>
       <Head>
         {data ? (
-          <title>{`${data.product.name} - PricePro`}</title>
+          <>
+            <title>{`${data.product.name} - PricePro`}</title>
+            <meta
+              property="og:title"
+              content={`${data.product.name} - PricePro`}
+              key="og:title"
+            />
+            <meta
+              name="description"
+              content={`Encuentra los precios más baratos de ${data.product.name} en PricePro`}
+              key="description"
+            />
+            <meta
+              property="og:description"
+              content={`Encuentra los precios más baratos de ${data.product.name} en PricePro`}
+              key="og:description"
+            />
+            <meta
+              property="og:url"
+              content={`https://pricepro.vercel.app${router.asPath}`}
+              key="og:url"
+            />
+
+            <meta property="og:image" content={`${data.product.imgUrl}.jpg`} />
+          </>
         ) : (
-          <title>Producto no encontrado - PricePro</title>
+          <>
+            <title>Producto no encontrado - PricePro</title>
+            <meta
+              property="og:title"
+              content="Producto no encontrado - Pricepro"
+            />
+          </>
         )}
       </Head>
       <Flex direction="column" align="center" mt={10}>
@@ -109,19 +149,20 @@ function Content() {
                       <ActionIcon
                         size="lg"
                         variant="outline"
-                        color="dark"
+                        color="teal"
                         radius="xl"
                         style={{
                           position: "absolute",
                           margin: "1rem",
                           zIndex: 2,
+                          borderWidth: "2px",
                         }}
                       >
                         <IconShare stroke={2} />
                       </ActionIcon>
                     </Popover.Target>
                     <Popover.Dropdown>
-                      <Text>Copiado</Text>
+                      <Text>¡Enlace copiado!</Text>
                     </Popover.Dropdown>
                   </Popover>
                   <MediaQuery largerThan="md" styles={{ display: "none" }}>
@@ -198,9 +239,13 @@ function Content() {
             <Grid m="1.2rem">
               {data &&
                 data.items.length > 0 &&
-                data.items.map((item, index) => (
-                  <Grid.Col key={item.id} span={6} lg={3} xl={2}>
-                    <ItemCard data={item} position={index + 1} />
+                sort(data.items, order!).map((item, index) => (
+                  <Grid.Col key={item.id} span={12} xs={6} lg={3} xl={2}>
+                    <ItemCard
+                      data={item}
+                      position={index + 1}
+                      orderBy={order as ItemProps["orderBy"]}
+                    />
                   </Grid.Col>
                 ))}
             </Grid>
@@ -226,7 +271,8 @@ const Page: NextPageWithLayout<{
 Page.getLayout = getLayout;
 
 Page.getInitialProps = async (ctx: NextPageContext) => {
-  const { id: idProduct } = ctx.query;
+  let { id: idProduct } = ctx.query;
+  idProduct = (idProduct as string).split("-")[0];
   const apiHost = process.env.NEXT_PUBLIC_API_HOST;
   const url = `${apiHost}items/${idProduct}`;
   var res: ResponseData;

@@ -1,45 +1,71 @@
-import { Badge, Flex, Navbar, NavbarProps, Title } from "@mantine/core";
-import useSWR from "swr";
-
-type Subcategory = {
-  name: string;
-  id: number;
-  category: { name: string; id: string };
-};
-
-const fetcher = (url: string) => {
-  if (url !== "")
-    return fetch(url)
-      .then(async (res) => {
-        return res.json();
-      })
-      .then((res) => {
-        if (res.error) throw res;
-        return res;
-      });
-  return new Promise<any>((resolve) => resolve(undefined));
-};
+import {
+  Accordion,
+  Badge,
+  Flex,
+  Navbar,
+  NavbarProps,
+  Title,
+} from "@mantine/core";
+import useSWRImmutable from "swr/immutable";
+import type { Subcategory, Category } from "@/utils/types";
+import { fetcher } from "@/utils/fetcher";
+import Link from "next/link";
 
 export default function NavBar(props: Omit<NavbarProps, "children">) {
   const apiHost = process.env.NEXT_PUBLIC_API_HOST;
-  const url = `${apiHost}list/subcategory`;
-  const { data } = useSWR<{ list: Subcategory[] }>(url, fetcher);
+  const urlSubcategory = `${apiHost}list/subcategory`;
+  const urlCategory = `${apiHost}list/category`;
 
+  const { data: dataSubcategory } = useSWRImmutable<{ list: Subcategory[] }>(
+    urlSubcategory,
+    fetcher
+  );
+  const { data: dataCategory } = useSWRImmutable<{ list: Category[] }>(
+    urlCategory,
+    fetcher
+  );
+
+  dataSubcategory &&
+    localStorage.setItem(
+      "subcategoryList",
+      JSON.stringify(dataSubcategory.list)
+    );
+
+  const categoryList = dataCategory?.list.map((category) => ({
+    ...category,
+    subcategories: dataSubcategory?.list.filter(
+      (subcategory) => subcategory.category.id === category.id
+    ),
+  }));
   return (
-    <>
-      <Navbar {...props}>
-        <Title order={3} mb="1rem">
-          Categorías
-        </Title>
-        <Flex wrap="wrap" gap="sm">
-          {data &&
-            data.list.map((subcategory) => (
-              <Badge color="teal" key={subcategory.id}>
-                {subcategory.name}
-              </Badge>
-            ))}
-        </Flex>
-      </Navbar>
-    </>
+    <Navbar {...props}>
+      <Title order={3} mb="1rem">
+        Categorías
+      </Title>
+      <Accordion>
+        {categoryList &&
+          categoryList.length > 0 &&
+          categoryList.map((category) => (
+            <Accordion.Item value={category.name} key={category.id}>
+              <Accordion.Control>{category.name}</Accordion.Control>
+              <Accordion.Panel>
+                <Flex wrap="wrap" gap="sm">
+                  {category.subcategories?.map((subcategory) => (
+                    <Badge
+                      color="teal"
+                      key={subcategory.id}
+                      component={Link}
+                      href={`/search?subcategory=${subcategory.id}`}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {subcategory.name}
+                    </Badge>
+                  ))}
+                </Flex>
+              </Accordion.Panel>
+            </Accordion.Item>
+          ))}
+      </Accordion>
+    </Navbar>
   );
 }

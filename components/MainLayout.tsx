@@ -1,5 +1,6 @@
 import {
   AppShell,
+  Badge,
   Burger,
   Group,
   Header,
@@ -43,9 +44,14 @@ export default function MainLayout({ children }: { children: ReactElement }) {
   }, [setOpened, route]);
 
   function searchHandler(data: { query: string }) {
-    if (data.query?.trim() !== "") {
-      router.push(`/search?q=${data.query}`);
-    } else router.push(`/search`);
+    let path = `/search`;
+    if (data.query?.trim() !== "") path += `?q=${data.query}`;
+    if (router.query.subcategory) {
+      if (path.includes("?")) path += "&";
+      else path += "?";
+      path += `subcategory=${router.query.subcategory}`;
+    }
+    router.push(path);
   }
 
   return (
@@ -102,7 +108,14 @@ export default function MainLayout({ children }: { children: ReactElement }) {
                 component={Link}
                 href="/"
               >
-                PricePro
+                PricePro{" "}
+                <Badge
+                  variant="gradient"
+                  gradient={{ from: "orange", to: "red", deg: 105 }}
+                  style={{ verticalAlign: "middle" }}
+                >
+                  Beta
+                </Badge>
               </Text>
               <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
                 <NavList colorScheme={theme.colorScheme} />
@@ -144,6 +157,7 @@ export default function MainLayout({ children }: { children: ReactElement }) {
             p="md"
             hidden={!opened}
             hiddenBreakpoint="sm"
+            style={{ overflow: "auto" }}
           />
         }
         footer={<MainFooter />}

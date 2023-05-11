@@ -1,11 +1,16 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import { Poppins } from "next/font/google";
-import heroImg from "@/public/heroImg.svg";
+import heroImgSvg from "@/public/heroImg.svg";
+import heroImgPng from "@/public/heroImg.png";
+import priceproLaptopLight from "@/public/pricepro_laptop_light.png";
+import priceproLaptopDark from "@/public/pricepro_laptop_dark.png";
 import Link from "next/link";
 import {
   Accordion,
   Button,
+  Center,
+  ColorScheme,
   Flex,
   Grid,
   Group,
@@ -25,7 +30,7 @@ import {
   IconTextPlus,
 } from "@tabler/icons-react";
 import MainFooter from "@/components/Footer";
-import { useScrollIntoView } from "@mantine/hooks";
+import { useLocalStorage, useScrollIntoView } from "@mantine/hooks";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
@@ -34,16 +39,24 @@ const poppins = Poppins({ subsets: ["latin"], weight: "300" });
 export default function Home() {
   const { scrollIntoView, targetRef } = useScrollIntoView<HTMLElement>();
   const { asPath } = useRouter();
+  const [colorScheme] = useLocalStorage<ColorScheme>({
+    key: "color-scheme",
+    defaultValue: "light",
+  });
+  const promotionImgSrc =
+    colorScheme === "light" ? priceproLaptopLight : priceproLaptopDark;
   useEffect(() => {
     if (asPath.includes("#about")) scrollIntoView();
   }, [asPath, scrollIntoView]);
   return (
     <>
       <Head>
-        <title>PricePro</title>
-        <meta name="description" content="Pricepro app" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>PricePro | Encuentra el precio más bajo</title>
         <link rel="icon" href="/favicon.ico" />
+        <meta
+          property="og:image"
+          content={`https://pricepro.vercel.app${heroImgPng.src}`}
+        />
       </Head>
       <main className={styles.main}>
         <Flex justify="flex-end" pt="1rem" pr="1rem">
@@ -87,14 +100,27 @@ export default function Home() {
           </Grid.Col>
           <MediaQuery smallerThan="md" styles={{ display: "none" }}>
             <Grid.Col span={12} md={6} className={styles.heroImg}>
-              <Image src={heroImg} alt="PricePro Savings"></Image>
+              <Image src={heroImgSvg} alt="PricePro Savings"></Image>
             </Grid.Col>
           </MediaQuery>
         </Grid>
       </main>
-      <section ref={targetRef} style={{ scrollBehavior: "smooth" }}>
+      <section ref={targetRef} style={{ overflow: "hidden" }}>
         <Stack className={styles.aboutSectionContainer}>
           <Grid className={styles.promotionSectionContainer}>
+            <MediaQuery largerThan="md" styles={{ display: "none" }}>
+              <Grid.Col span={12} md={5}>
+                <Center>
+                  <Image
+                    src={promotionImgSrc}
+                    alt="PricePro laptop light"
+                    className={styles.promotionImg}
+                    width={640}
+                    height={640}
+                  ></Image>
+                </Center>
+              </Grid.Col>
+            </MediaQuery>
             <Grid.Col span={12} md={7}>
               <Group align="baseline" noWrap>
                 <IconSearch className={styles.promotionSectionIcons} />
@@ -168,6 +194,17 @@ export default function Home() {
                 posibles errores que puedas encontrar
               </Text>
             </Grid.Col>
+            <MediaQuery smallerThan="md" styles={{ display: "none" }}>
+              <Grid.Col span={12} md={5} style={{ alignSelf: "center" }}>
+                <Image
+                  src={promotionImgSrc}
+                  alt="PricePro laptop light"
+                  className={styles.promotionImg}
+                  width={640}
+                  height={640}
+                ></Image>
+              </Grid.Col>
+            </MediaQuery>
           </Grid>
           <Accordion
             variant="filled"
@@ -232,7 +269,29 @@ export default function Home() {
           </Accordion>
         </Stack>
       </section>
-      <MainFooter />
+      <MainFooter>
+        Imágenes por Freepik
+        <Text
+          color="blue"
+          fz={12}
+          pl={4}
+          style={{ verticalAlign: "super", textDecoration: "underline" }}
+          component="a"
+          href="https://www.freepik.com/free-vector/cashback-concept-illustration-style_7362463.htm#query=money%20phone&position=12&from_view=search&track=robertav1_2_sidr"
+        >
+          1
+        </Text>
+        <Text
+          color="blue"
+          fz={12}
+          pl={4}
+          style={{ verticalAlign: "super", textDecoration: "underline" }}
+          component="a"
+          href="https://www.freepik.com/free-vector/laptop_3232492.htm#query=laptop&position=9&from_view=search&track=robertav1_2_sidr"
+        >
+          2
+        </Text>
+      </MainFooter>
     </>
   );
 }

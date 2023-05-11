@@ -2,8 +2,9 @@ import { Text, Group, useMantineTheme, Grid } from "@mantine/core";
 import styles from "./Footer.module.css";
 import { IconBrandGithub, IconCurrencyDollar } from "@tabler/icons-react";
 import NavList from "./NavBar/NavList";
+import { ReactNode } from "react";
 
-export default function MainFooter() {
+export default function MainFooter(props: { children?: ReactNode }) {
   const theme = useMantineTheme();
   return (
     <div
@@ -33,6 +34,9 @@ export default function MainFooter() {
             </a>
           </Group>
         </Grid.Col>
+      </Grid>
+      <Grid>
+        <Grid.Col span={12}>{props.children}</Grid.Col>
       </Grid>
     </div>
   );
