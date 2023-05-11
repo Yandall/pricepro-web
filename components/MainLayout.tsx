@@ -172,6 +172,7 @@ export default function MainLayout({ children }: { children: ReactElement }) {
             width={{ sm: 200, lg: 300 }}
             p="md"
             hidden={!opened}
+            setHidden={setOpened}
             hiddenBreakpoint="sm"
             style={{ overflow: "auto" }}
           />
