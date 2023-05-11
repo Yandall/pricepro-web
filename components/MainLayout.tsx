@@ -61,7 +61,7 @@ export default function MainLayout({ children }: { children: ReactElement }) {
       <style>
         {`@media (max-width: 48em) {
             :root {
-              --mantine-header-height: 10.75rem;
+              --mantine-header-height: 9.75rem;
             }
           }`}
       </style>
