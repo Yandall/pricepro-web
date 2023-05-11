@@ -2,6 +2,8 @@ import {
   AppShell,
   Badge,
   Burger,
+  Center,
+  Grid,
   Group,
   Header,
   MediaQuery,
@@ -59,7 +61,7 @@ export default function MainLayout({ children }: { children: ReactElement }) {
       <style>
         {`@media (max-width: 48em) {
             :root {
-              --mantine-header-height: 6.75rem;
+              --mantine-header-height: 10.75rem;
             }
           }`}
       </style>
@@ -89,66 +91,80 @@ export default function MainLayout({ children }: { children: ReactElement }) {
                   : "",
             }}
           >
-            <Group position="apart">
+            <Grid gutter="xs">
               <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-                <Burger
-                  opened={opened}
-                  onClick={() => setOpened((o) => !o)}
-                  size="sm"
-                  color={theme.colors.gray[6]}
-                  mr="xl"
-                />
-              </MediaQuery>
-              <Text
-                style={{
-                  fontWeight: 700,
-                  fontSize: "1.625rem",
-                  lineHeight: "1.35",
-                }}
-                component={Link}
-                href="/"
-              >
-                PricePro{" "}
-                <Badge
-                  variant="gradient"
-                  gradient={{ from: "orange", to: "red", deg: 105 }}
-                  style={{ verticalAlign: "middle" }}
-                >
-                  Beta
-                </Badge>
-              </Text>
-              <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
-                <NavList colorScheme={theme.colorScheme} />
-              </MediaQuery>
-              <Group
-                noWrap
-                position="right"
-                style={{ flex: "0 1 30%", maxWidth: "15.5rem" }}
-              >
-                <form
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                  }}
-                  onSubmit={searchForm.onSubmit(searchHandler)}
-                >
-                  <TextInput
-                    placeholder="Buscar producto"
-                    maw={300}
-                    miw={100}
-                    {...searchForm.getInputProps("query")}
-                    icon={<IconSearch />}
-                    radius="lg"
+                <Grid.Col span={1}>
+                  <Burger
+                    opened={opened}
+                    onClick={() => setOpened((o) => !o)}
+                    size="sm"
+                    color={theme.colors.gray[6]}
+                    mr="xl"
                   />
-                </form>
-                <ColorSchemeToggle />
-              </Group>
-            </Group>
-            <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-              <Group position="center" pt="md" pb="md">
-                <NavList />
-              </Group>
-            </MediaQuery>
+                </Grid.Col>
+              </MediaQuery>
+              <Grid.Col span={10} sm={3} lg={2}>
+                <Center>
+                  <Text
+                    style={{
+                      fontWeight: 700,
+                      fontSize: "1.625rem",
+                      lineHeight: "1.35",
+                    }}
+                    component={Link}
+                    href="/"
+                  >
+                    PricePro{" "}
+                    <Badge
+                      variant="gradient"
+                      gradient={{ from: "orange", to: "red", deg: 105 }}
+                      style={{ verticalAlign: "middle" }}
+                    >
+                      Beta
+                    </Badge>
+                  </Text>
+                </Center>
+              </Grid.Col>
+              <MediaQuery largerThan="sm" styles={{ display: "none" }}>
+                <Grid.Col span={1}>
+                  <ColorSchemeToggle />
+                </Grid.Col>
+              </MediaQuery>
+              <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
+                <Grid.Col sm={6} lg={6}>
+                  <Center>
+                    <NavList colorScheme={theme.colorScheme} />
+                  </Center>
+                </Grid.Col>
+              </MediaQuery>
+              <Grid.Col span={12} sm={3} lg={4}>
+                <Group noWrap>
+                  <form
+                    style={{
+                      flex: "1 1 auto",
+                    }}
+                    onSubmit={searchForm.onSubmit(searchHandler)}
+                  >
+                    <TextInput
+                      placeholder="Buscar producto"
+                      {...searchForm.getInputProps("query")}
+                      icon={<IconSearch />}
+                      radius="lg"
+                    />
+                  </form>
+                  <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
+                    <ColorSchemeToggle />
+                  </MediaQuery>
+                </Group>
+              </Grid.Col>
+              <MediaQuery largerThan="sm" styles={{ display: "none" }}>
+                <Grid.Col span={12}>
+                  <Group position="center" pt="md" pb="md">
+                    <NavList />
+                  </Group>
+                </Grid.Col>
+              </MediaQuery>
+            </Grid>
           </Header>
         }
         navbar={
