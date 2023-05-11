@@ -57,10 +57,22 @@ function Content() {
         <meta
           name="description"
           content="Buscador de productos. Encuentra el precio más barato en diferentes tiendas del país"
+          key="description"
+        />
+        <meta
+          name="og:description"
+          content="Buscador de productos. Encuentra el precio más barato en diferentes tiendas del país"
+          key="og:description"
+        />
+        <meta
+          property="og:url"
+          content={`https://pricepro.vercel.app${router.asPath}`}
+          key="og:url"
         />
         <meta
           property="og:title"
           content={`${query.q || "Productos"} - PricePro`}
+          key="og:title"
         />
       </Head>
       <Flex

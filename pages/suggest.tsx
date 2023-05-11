@@ -149,6 +149,21 @@ export default function Page() {
     <>
       <Head>
         <title>Sugerir producto | PricePro</title>
+        <meta
+          name="description"
+          content="Sugiere un producto para que sea añadido a PricePro"
+          key="description"
+        />
+        <meta
+          name="og:description"
+          content="Sugiere un producto para que sea añadido a PricePro"
+          key="og:description"
+        />
+        <meta
+          property="og:url"
+          content="https://pricepro.vercel.app/suggest"
+          key="og:url"
+        />
       </Head>
       <Grid justify="center" pt={20}>
         <Grid.Col span={11} md={8}>

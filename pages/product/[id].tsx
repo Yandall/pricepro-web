@@ -100,15 +100,24 @@ function Content() {
             <meta
               property="og:title"
               content={`${data.product.name} - PricePro`}
+              key="og:title"
             />
             <meta
               name="description"
               content={`Encuentra los precios más baratos de ${data.product.name} en PricePro`}
+              key="description"
             />
             <meta
-              name="og:description"
+              property="og:description"
               content={`Encuentra los precios más baratos de ${data.product.name} en PricePro`}
+              key="og:description"
             />
+            <meta
+              property="og:url"
+              content={`https://pricepro.vercel.app${router.asPath}`}
+              key="og:url"
+            />
+
             <meta property="og:image" content={`${data.product.imgUrl}.jpg`} />
           </>
         ) : (
