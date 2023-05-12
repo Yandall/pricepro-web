@@ -12,7 +12,11 @@ export default function ColorSchemeToggle(props: ActionIconProps) {
     setColorScheme((current) => (current === "dark" ? "light" : "dark"));
 
   return (
-    <ActionIcon {...props} onClick={toggleColorScheme}>
+    <ActionIcon
+      {...props}
+      onClick={toggleColorScheme}
+      aria-label="Toggle color scheme"
+    >
       {colorScheme === "dark" ? <IconSun /> : <IconMoonStars />}
     </ActionIcon>
   );

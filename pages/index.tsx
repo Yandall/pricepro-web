@@ -191,7 +191,17 @@ export default function Home() {
               >
                 PricePro es un proyecto en desarollo, lo que significa que se
                 piensa añadir más funcionalidades en el futuro y corregir
-                posibles errores que puedas encontrar
+                posibles errores que puedas encontrar. Puedes reportar cualquier
+                inconveniente en{" "}
+                <Text
+                  span
+                  color="teal"
+                  style={{ textDecoration: "underline" }}
+                  component="a"
+                  href="https://twitter.com/priceproapp"
+                >
+                  Twitter
+                </Text>
               </Text>
             </Grid.Col>
             <MediaQuery smallerThan="md" styles={{ display: "none" }}>
@@ -214,7 +224,7 @@ export default function Home() {
           >
             <Accordion.Item value="howItWorks">
               <Accordion.Control>
-                <Title order={3}>¿Cómo funciona?</Title>
+                <Title order={2}>¿Cómo funciona?</Title>
               </Accordion.Control>
               <Accordion.Panel>
                 PricePro a partir del nombre de un producto realiza búsquedas en
@@ -224,7 +234,7 @@ export default function Home() {
             </Accordion.Item>
             <Accordion.Item value="limitations">
               <Accordion.Control>
-                <Title order={3}>Limitaciones</Title>
+                <Title order={2}>Limitaciones</Title>
               </Accordion.Control>
               <Accordion.Panel>
                 <List>
@@ -248,7 +258,7 @@ export default function Home() {
             </Accordion.Item>
             <Accordion.Item value="developer">
               <Accordion.Control>
-                <Title order={3}>¿Quién desarrolla PricePro?</Title>
+                <Title order={2}>¿Quién desarrolla PricePro?</Title>
               </Accordion.Control>
               <Accordion.Panel>
                 PricePro lo desarrolla una sola persona en sus tiempos libres.

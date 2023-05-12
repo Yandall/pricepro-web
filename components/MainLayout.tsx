@@ -160,7 +160,7 @@ export default function MainLayout({ children }: { children: ReactElement }) {
               <MediaQuery largerThan="sm" styles={{ display: "none" }}>
                 <Grid.Col span={12}>
                   <Group position="center" pt="md" pb="md">
-                    <NavList />
+                    <NavList colorScheme={theme.colorScheme} />
                   </Group>
                 </Grid.Col>
               </MediaQuery>

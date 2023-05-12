@@ -1,6 +1,10 @@
 import { Text, Group, useMantineTheme, Grid } from "@mantine/core";
 import styles from "./Footer.module.css";
-import { IconBrandGithub, IconCurrencyDollar } from "@tabler/icons-react";
+import {
+  IconBrandGithub,
+  IconBrandTwitter,
+  IconCurrencyDollar,
+} from "@tabler/icons-react";
 import NavList from "./NavBar/NavList";
 import { ReactNode } from "react";
 
@@ -29,8 +33,14 @@ export default function MainFooter(props: { children?: ReactNode }) {
         </Grid.Col>
         <Grid.Col span={1} sm={3}>
           <Group position="right" spacing="xs">
-            <a href="https://github.com/Yandall/pricepro-web">
+            <a
+              href="https://github.com/Yandall/pricepro-web"
+              aria-label="Github link"
+            >
               <IconBrandGithub />
+            </a>
+            <a href="https://twitter.com/priceproapp" aria-label="Twitter link">
+              <IconBrandTwitter />
             </a>
           </Group>
         </Grid.Col>
