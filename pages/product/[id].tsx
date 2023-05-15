@@ -18,7 +18,7 @@ import {
 } from "@mantine/core";
 import { IconCheck, IconShare } from "@tabler/icons-react";
 import ItemCard, { Props as ItemProps } from "@/components/ItemCard";
-import { useClipboard } from "@mantine/hooks";
+import { useClipboard, useMediaQuery } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { NextPageContext } from "next";
 import Head from "next/head";
@@ -26,23 +26,59 @@ import PlaceholderImg from "@/components/PlaceHolderImg";
 import { notifications } from "@mantine/notifications";
 import { fetcher } from "@/utils/fetcher";
 import type { Product, Item } from "@/utils/types";
+import { Paginate } from "@/components/Paginate";
 
 type ResponseData =
   | {
       product: Product;
       items: Item[];
       updating: boolean;
+      metadata: { pages: number; total: number };
     }
   | undefined;
 
 function Content() {
   const apiHost = process.env.NEXT_PUBLIC_API_HOST;
   const router = useRouter();
-  let { id: idProduct } = router.query;
-  idProduct = (idProduct as string).split("-")[0];
-  let url = idProduct ? `${apiHost}items/${idProduct}` : "";
-  const { data, mutate } = useSWR<ResponseData>(url, fetcher);
   const [order, setOrder] = useState<string | null>("pricePerUnit");
+  let { id: idProduct, page } = router.query;
+  idProduct = (idProduct as string).split("-")[0];
+  const pageQuery = `?page=${Number(page) > 0 ? page : 1}`;
+  const isViewPortXl = useMediaQuery("(min-width: 88em)");
+  const pageSizeQuery = `&pagesize=${isViewPortXl ? 24 : 12}`;
+  const orderByQuery = `&orderby=${order}`;
+  const urlItems = idProduct
+    ? `${apiHost}items/${idProduct}${pageQuery}${pageSizeQuery}${orderByQuery}`
+    : "";
+  const { data, mutate } = useSWR<ResponseData>(urlItems, fetcher);
+
+  const urlLowHiPrices = `${apiHost}products/lowHiPrice`;
+  const requestBody = {
+    orderBy: order,
+    products: [Number(idProduct)],
+    lowest: true,
+  };
+  const { data: itemLowestPrice } = useSWR<{ list: Item[] }>(
+    [
+      urlLowHiPrices,
+      {
+        method: "POST",
+        body: JSON.stringify(requestBody),
+      },
+    ],
+    ([url, options]: [string, RequestInit]) => fetcher(url, options)
+  );
+  requestBody.lowest = false;
+  const { data: itemHighestPrice } = useSWR<{ list: Item[] }>(
+    [
+      urlLowHiPrices,
+      {
+        method: "POST",
+        body: JSON.stringify(requestBody),
+      },
+    ],
+    ([url, options]: [string, RequestInit]) => fetcher(url, options)
+  );
   const clipboard = useClipboard();
 
   useEffect(() => {
@@ -77,11 +113,6 @@ function Content() {
     clipboard.copy(copyUrl);
   }
 
-  function getLast<T>(list?: Array<T>) {
-    if (!list) return;
-    return list[list.length - 1];
-  }
-
   function sort(list: Item[], orderBy: string) {
     if (orderBy === "pricePerUnit" && list.length > 0) {
       return list.sort((prev, next) => prev.pricePerUnit - next.pricePerUnit);
@@ -89,6 +120,12 @@ function Content() {
       return list.sort((prev, next) => prev.price - next.price);
     }
     return list;
+  }
+
+  function getItemPosition(offset: number = 0) {
+    let position = isViewPortXl ? 24 : 12;
+    position *= Number(page || 1) - 1;
+    return position + offset;
   }
 
   return (
@@ -197,8 +234,8 @@ function Content() {
                       <Text weight={700} size="xl">
                         $
                         {order === "pricePerUnit"
-                          ? data.items[0]?.pricePerUnit
-                          : data.items[0]?.price}
+                          ? itemLowestPrice?.list[0].pricePerUnit
+                          : itemLowestPrice?.list[0].price}
                       </Text>
                       {order === "pricePerUnit" && (
                         <Text>por {data?.product.units}</Text>
@@ -211,8 +248,8 @@ function Content() {
                       <Text weight={700} size="xl">
                         $
                         {order === "pricePerUnit"
-                          ? getLast(data.items)?.pricePerUnit
-                          : getLast(data.items)?.price}
+                          ? itemHighestPrice?.list[0].pricePerUnit
+                          : itemHighestPrice?.list[0].price}
                       </Text>
                       {order === "pricePerUnit" && (
                         <Text>por {data.product.units}</Text>
@@ -237,19 +274,26 @@ function Content() {
                 </Grid.Col>
               </Grid>
             </Card>
-            <Grid m="1.2rem">
-              {data &&
-                data.items.length > 0 &&
-                sort(data.items, order!).map((item, index) => (
-                  <Grid.Col key={item.id} span={12} xs={6} lg={3} xl={2}>
-                    <ItemCard
-                      data={item}
-                      position={index + 1}
-                      orderBy={order as ItemProps["orderBy"]}
-                    />
-                  </Grid.Col>
-                ))}
-            </Grid>
+            <Flex justify="space-between" direction="column" gap="lg" h="100%">
+              <Grid m="1.2rem">
+                {data &&
+                  data.items.length > 0 &&
+                  sort(data.items, order!).map((item, index) => (
+                    <Grid.Col key={item.id} span={12} xs={6} lg={3} xl={2}>
+                      <ItemCard
+                        data={item}
+                        position={getItemPosition(index + 1)}
+                        orderBy={order as ItemProps["orderBy"]}
+                      />
+                    </Grid.Col>
+                  ))}
+              </Grid>
+              <Paginate
+                total={data.metadata.total}
+                pages={data.metadata.pages}
+                current={data.items.length}
+              />
+            </Flex>
           </>
         ) : (
           <Title order={1}>Producto no encontrado</Title>
@@ -272,10 +316,11 @@ const Page: NextPageWithLayout<{
 Page.getLayout = getLayout;
 
 Page.getInitialProps = async (ctx: NextPageContext) => {
-  let { id: idProduct } = ctx.query;
+  let { id: idProduct, page } = ctx.query;
   idProduct = (idProduct as string).split("-")[0];
   const apiHost = process.env.NEXT_PUBLIC_API_HOST;
-  const url = `${apiHost}items/${idProduct}`;
+  let pageQuery = `?page=${Number(page) > 0 ? page : 1}`;
+  const url = `${apiHost}items/${idProduct}${pageQuery}&pagesize=12&orderby=pricePerUnit`;
   var res: ResponseData;
   try {
     res = await fetcher(url);
