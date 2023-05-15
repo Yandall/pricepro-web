@@ -2,6 +2,8 @@ import {
   AppShell,
   Badge,
   Burger,
+  Center,
+  Grid,
   Group,
   Header,
   MediaQuery,
@@ -59,16 +61,18 @@ export default function MainLayout({ children }: { children: ReactElement }) {
       <style>
         {`@media (max-width: 48em) {
             :root {
-              --mantine-header-height: 6.75rem;
+              --mantine-header-height: 9.75rem;
             }
           }`}
       </style>
       <AppShell
         padding="md"
-        navbarOffsetBreakpoint="sm"
         styles={(theme) => {
           return {
             main: {
+              display: opened ? "none" : undefined,
+              paddingLeft: "1rem",
+              paddingTop: "1rem",
               backgroundColor:
                 theme.colorScheme === "dark"
                   ? theme.colors.dark[8]
@@ -83,72 +87,88 @@ export default function MainLayout({ children }: { children: ReactElement }) {
             style={{
               height: "var(--mantine-header-height)",
               maxHeight: "var(--mantine-header-height)",
+              position: "sticky",
+              zIndex: 101,
               backgroundColor:
                 theme.colorScheme === "light"
                   ? "var(--mantine-color-lime-4)"
                   : "",
             }}
           >
-            <Group position="apart">
+            <Grid gutter="xs">
               <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-                <Burger
-                  opened={opened}
-                  onClick={() => setOpened((o) => !o)}
-                  size="sm"
-                  color={theme.colors.gray[6]}
-                  mr="xl"
-                />
-              </MediaQuery>
-              <Text
-                style={{
-                  fontWeight: 700,
-                  fontSize: "1.625rem",
-                  lineHeight: "1.35",
-                }}
-                component={Link}
-                href="/"
-              >
-                PricePro{" "}
-                <Badge
-                  variant="gradient"
-                  gradient={{ from: "orange", to: "red", deg: 105 }}
-                  style={{ verticalAlign: "middle" }}
-                >
-                  Beta
-                </Badge>
-              </Text>
-              <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
-                <NavList colorScheme={theme.colorScheme} />
-              </MediaQuery>
-              <Group
-                noWrap
-                position="right"
-                style={{ flex: "0 1 30%", maxWidth: "15.5rem" }}
-              >
-                <form
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                  }}
-                  onSubmit={searchForm.onSubmit(searchHandler)}
-                >
-                  <TextInput
-                    placeholder="Buscar producto"
-                    maw={300}
-                    miw={100}
-                    {...searchForm.getInputProps("query")}
-                    icon={<IconSearch />}
-                    radius="lg"
+                <Grid.Col span={1}>
+                  <Burger
+                    opened={opened}
+                    onClick={() => setOpened((o) => !o)}
+                    size="sm"
+                    color={theme.colors.gray[6]}
+                    mr="xl"
                   />
-                </form>
-                <ColorSchemeToggle />
-              </Group>
-            </Group>
-            <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-              <Group position="center" pt="md" pb="md">
-                <NavList />
-              </Group>
-            </MediaQuery>
+                </Grid.Col>
+              </MediaQuery>
+              <Grid.Col span={10} sm={3} lg={2}>
+                <Center>
+                  <Text
+                    style={{
+                      fontWeight: 700,
+                      fontSize: "1.625rem",
+                      lineHeight: "1.35",
+                    }}
+                    component={Link}
+                    href="/"
+                  >
+                    PricePro{" "}
+                    <Badge
+                      variant="gradient"
+                      gradient={{ from: "orange", to: "red", deg: 105 }}
+                      style={{ verticalAlign: "middle" }}
+                    >
+                      Beta
+                    </Badge>
+                  </Text>
+                </Center>
+              </Grid.Col>
+              <MediaQuery largerThan="sm" styles={{ display: "none" }}>
+                <Grid.Col span={1}>
+                  <ColorSchemeToggle />
+                </Grid.Col>
+              </MediaQuery>
+              <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
+                <Grid.Col sm={6} lg={6} style={{ alignSelf: "center" }}>
+                  <Center>
+                    <NavList colorScheme={theme.colorScheme} />
+                  </Center>
+                </Grid.Col>
+              </MediaQuery>
+              <Grid.Col span={12} sm={3} lg={4}>
+                <Group noWrap>
+                  <form
+                    style={{
+                      flex: "1 1 auto",
+                    }}
+                    onSubmit={searchForm.onSubmit(searchHandler)}
+                  >
+                    <TextInput
+                      placeholder="Buscar producto"
+                      {...searchForm.getInputProps("query")}
+                      icon={<IconSearch />}
+                      radius="lg"
+                    />
+                  </form>
+                  <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
+                    <ColorSchemeToggle />
+                  </MediaQuery>
+                </Group>
+              </Grid.Col>
+              <MediaQuery largerThan="sm" styles={{ display: "none" }}>
+                <Grid.Col span={12} style={{ alignSelf: "center" }}>
+                  <Group position="center" pt="md" pb="md">
+                    <NavList colorScheme={theme.colorScheme} />
+                  </Group>
+                </Grid.Col>
+              </MediaQuery>
+            </Grid>
           </Header>
         }
         navbar={
@@ -156,8 +176,9 @@ export default function MainLayout({ children }: { children: ReactElement }) {
             width={{ sm: 200, lg: 300 }}
             p="md"
             hidden={!opened}
+            setHidden={setOpened}
             hiddenBreakpoint="sm"
-            style={{ overflow: "auto" }}
+            style={{ overflow: "auto", position: "sticky" }}
           />
         }
         footer={<MainFooter />}
