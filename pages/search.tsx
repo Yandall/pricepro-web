@@ -139,7 +139,7 @@ function Content() {
           {data &&
             data.list.length > 0 &&
             data.list.map((prod) => (
-              <Grid.Col key={prod.id} span={6} md={3} lg={3} xl={2}>
+              <Grid.Col key={prod.id} span={6} md={4} lg={2.4} xl={2}>
                 <ProductCard
                   data={prod}
                   cheapest={dataLowestPrice?.list.find(
