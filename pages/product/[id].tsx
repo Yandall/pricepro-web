@@ -67,7 +67,7 @@ function Content() {
           autoClose: 5000,
         });
         mutate({ ...data, updating: false });
-      }, 60 * 1000);
+      }, 75 * 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -126,6 +126,7 @@ function Content() {
             <meta
               property="og:title"
               content="Producto no encontrado - Pricepro"
+              key="og:title"
             />
           </>
         )}
