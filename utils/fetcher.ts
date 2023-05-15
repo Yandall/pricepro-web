@@ -1,6 +1,6 @@
-export function fetcher(url: string) {
+export function fetcher(url: string, options?: RequestInit) {
   if (url !== "")
-    return fetch(url)
+    return fetch(url, options)
       .then(async (res) => {
         return res.json();
       })
