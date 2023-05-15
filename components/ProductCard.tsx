@@ -59,7 +59,7 @@ export default function ProductCard({
 
         {cheapest && (
           <Text weight={200} component={Flex} gap="xs">
-            Mejor precio en:
+            Mejor precio:
             <StoreIcon store={cheapest.store.name} />
           </Text>
         )}

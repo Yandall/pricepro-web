@@ -42,12 +42,14 @@ function Content() {
     fetcher
   );
 
-  let urlLowestPrice = `${apiHost}products/lowHiPrice`;
   let requestBody = {
     orderBy: "pricePerUnit",
     products: data?.list.map((p) => p.id),
     lowest: true,
   };
+  let urlLowestPrice = requestBody.products
+    ? `${apiHost}products/lowHiPrice`
+    : "";
   const { data: dataLowestPrice } = useSWRImmutable<{ list: Item[] }>(
     [
       urlLowestPrice,
@@ -66,8 +68,11 @@ function Content() {
   );
 
   function getPaginationUrl(page: number) {
-    if (query.q && query.q !== "") return `?q=${query.q}&page=${page}`;
-    return `?page=${page}`;
+    let pageLink = `?page=${page}`;
+    if (query.q && query.q !== "") pageLink += `&q=${query.q}`;
+    if (query.subcategory && query.subcategory !== "")
+      pageLink += `&subcategory=${query.subcategory}`;
+    return pageLink;
   }
   return (
     <>
@@ -134,7 +139,7 @@ function Content() {
           {data &&
             data.list.length > 0 &&
             data.list.map((prod) => (
-              <Grid.Col key={prod.id} span={6} md={4} lg={3} xl={2}>
+              <Grid.Col key={prod.id} span={6} md={3} lg={3} xl={2}>
                 <ProductCard
                   data={prod}
                   cheapest={dataLowestPrice?.list.find(
