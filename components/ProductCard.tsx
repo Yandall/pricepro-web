@@ -1,9 +1,16 @@
-import { Badge, Card, Container, Group, Image, Text } from "@mantine/core";
+import { Badge, Card, Container, Flex, Image, Text } from "@mantine/core";
 import Link from "next/link";
 import PlaceholderImg from "./PlaceHolderImg";
-import type { Product } from "@/utils/types";
+import type { Item, Product } from "@/utils/types";
+import StoreIcon from "./StoreIcon";
 
-export default function ProductCard({ data }: { data: Product }) {
+export default function ProductCard({
+  data,
+  cheapest,
+}: {
+  data: Product;
+  cheapest?: Item;
+}) {
   return (
     <Card
       radius="lg"
@@ -35,23 +42,27 @@ export default function ProductCard({ data }: { data: Product }) {
           />
         </Link>
       </Card.Section>
-      <Container m={0} px={0} style={{ flex: "1 1 40%" }}>
-        <Group position="apart" mt="md" mb="s">
-          <Text
-            weight={700}
-            component={Link}
-            href={`/product/${data.id}-${data.name}`}
-          >
-            {data.name}
+      <Container m={0} mt="xs" px={0} style={{ flex: "1 1 40%" }}>
+        <Text
+          weight={700}
+          component={Link}
+          href={`/product/${data.id}-${data.name}`}
+        >
+          {data.name}
+        </Text>
+        <Text weight={200}>
+          Unidades:{" "}
+          <Text weight={400} span>
+            {data.units}
           </Text>
+        </Text>
 
-          <Text weight={200}>
-            Unidades:{" "}
-            <Text weight={400} display="inline">
-              {data.units}
-            </Text>
+        {cheapest && (
+          <Text weight={200} component={Flex} gap="xs">
+            Mejor precio en:
+            <StoreIcon store={cheapest.store.name} />
           </Text>
-        </Group>
+        )}
 
         <Badge
           color="teal"

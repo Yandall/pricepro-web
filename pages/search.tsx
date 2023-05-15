@@ -17,7 +17,7 @@ import { NextPageContext } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { fetcher } from "@/utils/fetcher";
-import type { Product, Subcategory } from "@/utils/types";
+import type { Item, Product, Subcategory } from "@/utils/types";
 import { useLocalStorage } from "@mantine/hooks";
 import { IconX } from "@tabler/icons-react";
 
@@ -33,12 +33,31 @@ function Content() {
   let subcategoryQuery = query.subcategory
     ? `&subcategory=${query.subcategory}`
     : "";
-  let url = `${apiHost}products/search?search=${
+  let urlProducts = `${apiHost}products/search?search=${
     query.q || ""
   }${pageQuery}${subcategoryQuery}`;
 
-  const { data, isLoading } = useSWRImmutable<ResponseData>(url, fetcher);
+  const { data, isLoading } = useSWRImmutable<ResponseData>(
+    urlProducts,
+    fetcher
+  );
 
+  let urlLowestPrice = `${apiHost}products/lowHiPrice`;
+  let requestBody = {
+    orderBy: "pricePerUnit",
+    products: data?.list.map((p) => p.id),
+    lowest: true,
+  };
+  const { data: dataLowestPrice } = useSWRImmutable<{ list: Item[] }>(
+    [
+      urlLowestPrice,
+      {
+        method: "POST",
+        body: JSON.stringify(requestBody),
+      },
+    ],
+    ([url, options]: [string, RequestInit]) => fetcher(url, options)
+  );
   const [subcategoryList] = useLocalStorage<Subcategory[]>({
     key: "subcategoryList",
   });
@@ -116,7 +135,12 @@ function Content() {
             data.list.length > 0 &&
             data.list.map((prod) => (
               <Grid.Col key={prod.id} span={6} md={4} lg={3} xl={2}>
-                <ProductCard data={prod} />
+                <ProductCard
+                  data={prod}
+                  cheapest={dataLowestPrice?.list.find(
+                    (item) => item.product.id === prod.id
+                  )}
+                />
               </Grid.Col>
             ))}
           {(!data || data.list.length === 0) && (

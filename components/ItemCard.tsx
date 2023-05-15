@@ -1,5 +1,6 @@
 import { Badge, Card, Flex, Image, Text } from "@mantine/core";
 import type { Item } from "@/utils/types";
+import StoreIcon from "./StoreIcon";
 
 export type Props = {
   data: Item;
@@ -38,8 +39,8 @@ export default function ItemCard({
           <Text weight={200} size="sm">
             Marca: {data.brand.name}
           </Text>
-          <Text weight={200} size="sm">
-            Tienda: {data.store.name}
+          <Text weight={200} size="sm" component={Flex} gap="xs">
+            Tienda: <StoreIcon store={data.store.name} />
           </Text>
           <Text weight={200} size="sm">
             Cantidad: {data.quantity} {data.product.units}
