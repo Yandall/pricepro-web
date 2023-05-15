@@ -67,10 +67,12 @@ export default function MainLayout({ children }: { children: ReactElement }) {
       </style>
       <AppShell
         padding="md"
-        navbarOffsetBreakpoint="sm"
         styles={(theme) => {
           return {
             main: {
+              display: opened ? "none" : undefined,
+              paddingLeft: "1rem",
+              paddingTop: "1rem",
               backgroundColor:
                 theme.colorScheme === "dark"
                   ? theme.colors.dark[8]
@@ -85,6 +87,8 @@ export default function MainLayout({ children }: { children: ReactElement }) {
             style={{
               height: "var(--mantine-header-height)",
               maxHeight: "var(--mantine-header-height)",
+              position: "sticky",
+              zIndex: 101,
               backgroundColor:
                 theme.colorScheme === "light"
                   ? "var(--mantine-color-lime-4)"
@@ -131,7 +135,7 @@ export default function MainLayout({ children }: { children: ReactElement }) {
                 </Grid.Col>
               </MediaQuery>
               <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
-                <Grid.Col sm={6} lg={6}>
+                <Grid.Col sm={6} lg={6} style={{ alignSelf: "center" }}>
                   <Center>
                     <NavList colorScheme={theme.colorScheme} />
                   </Center>
@@ -158,7 +162,7 @@ export default function MainLayout({ children }: { children: ReactElement }) {
                 </Group>
               </Grid.Col>
               <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-                <Grid.Col span={12}>
+                <Grid.Col span={12} style={{ alignSelf: "center" }}>
                   <Group position="center" pt="md" pb="md">
                     <NavList colorScheme={theme.colorScheme} />
                   </Group>
@@ -174,7 +178,7 @@ export default function MainLayout({ children }: { children: ReactElement }) {
             hidden={!opened}
             setHidden={setOpened}
             hiddenBreakpoint="sm"
-            style={{ overflow: "auto" }}
+            style={{ overflow: "auto", position: "sticky" }}
           />
         }
         footer={<MainFooter />}

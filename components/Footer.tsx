@@ -11,7 +11,7 @@ import { ReactNode } from "react";
 export default function MainFooter(props: { children?: ReactNode }) {
   const theme = useMantineTheme();
   return (
-    <div
+    <footer
       className={`${styles.footerContainer} ${
         theme.colorScheme === "light" ? styles.lightBgColor : styles.darkBgColor
       }`}
@@ -48,6 +48,6 @@ export default function MainFooter(props: { children?: ReactNode }) {
       <Grid>
         <Grid.Col span={12}>{props.children}</Grid.Col>
       </Grid>
-    </div>
+    </footer>
   );
 }
