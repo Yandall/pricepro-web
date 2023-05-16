@@ -234,8 +234,8 @@ function Content() {
                       <Text weight={700} size="xl">
                         $
                         {order === "pricePerUnit"
-                          ? itemLowestPrice?.list[0].pricePerUnit
-                          : itemLowestPrice?.list[0].price}
+                          ? itemLowestPrice?.list[0]?.pricePerUnit
+                          : itemLowestPrice?.list[0]?.price}
                       </Text>
                       {order === "pricePerUnit" && (
                         <Text>por {data?.product.units}</Text>
@@ -248,8 +248,8 @@ function Content() {
                       <Text weight={700} size="xl">
                         $
                         {order === "pricePerUnit"
-                          ? itemHighestPrice?.list[0].pricePerUnit
-                          : itemHighestPrice?.list[0].price}
+                          ? itemHighestPrice?.list[0]?.pricePerUnit
+                          : itemHighestPrice?.list[0]?.price}
                       </Text>
                       {order === "pricePerUnit" && (
                         <Text>por {data.product.units}</Text>
