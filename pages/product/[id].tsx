@@ -2,6 +2,8 @@ import { getLayout } from "@/components/MainLayout";
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
 import useSWR, { SWRConfig } from "swr";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 import {
   ActionIcon,
   Badge,
@@ -86,10 +88,10 @@ function Content() {
       notifications.show({
         id: "updating-data",
         title: "Actualizando producto",
-        message: "Datos actualizados en aproximadamente un minuto",
+        message: "Datos actualizados en aproximadamente dos minutos",
         loading: true,
         autoClose: false,
-        withCloseButton: false,
+        withCloseButton: true,
       });
 
       setTimeout(() => {
@@ -103,7 +105,7 @@ function Content() {
           autoClose: 5000,
         });
         mutate({ ...data, updating: false });
-      }, 75 * 1000);
+      }, 120 * 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -225,6 +227,12 @@ function Content() {
                   </MediaQuery>
                 </Grid.Col>
                 <Grid.Col span={12} xs={7}>
+                  <Text fw={200} fz={12}>
+                    Actualizado en{" "}
+                    {format(new Date(data.product.lastUpdate), "PPP", {
+                      locale: es,
+                    })}
+                  </Text>
                   <Badge color="teal">{data.product.subcategory.name}</Badge>
                   <Title>{data.product.name}</Title>
                   <Text>{data.product.description}</Text>
