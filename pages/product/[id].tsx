@@ -2,7 +2,8 @@ import { getLayout } from "@/components/MainLayout";
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
 import useSWR, { SWRConfig } from "swr";
-import { format } from "date-fns";
+import useSWRImmutable from "swr/immutable";
+import { compareAsc, format } from "date-fns";
 import { es } from "date-fns/locale";
 import {
   ActionIcon,
@@ -30,14 +31,15 @@ import { fetcher } from "@/utils/fetcher";
 import type { Product, Item } from "@/utils/types";
 import { Paginate } from "@/components/Paginate";
 
-type ResponseData =
+type ItemsData =
   | {
-      product: Product;
       items: Item[];
       updating: boolean;
       metadata: { pages: number; total: number };
     }
   | undefined;
+
+type ProductData = { product: Product } | undefined;
 
 function Content() {
   const apiHost = process.env.NEXT_PUBLIC_API_HOST;
@@ -45,6 +47,10 @@ function Content() {
   const [order, setOrder] = useState<string | null>("pricePerUnit");
   let { id: idProduct, page } = router.query;
   idProduct = (idProduct as string).split("-")[0];
+  const urlProduct = `${apiHost}product/${idProduct}`;
+  const { data: dataProduct, mutate: mutateProduct } =
+    useSWRImmutable<ProductData>(urlProduct, fetcher);
+
   const pageQuery = `?page=${Number(page) > 0 ? page : 1}`;
   const isViewPortXl = useMediaQuery("(min-width: 88em)");
   const pageSizeQuery = `&pagesize=${isViewPortXl ? 24 : 12}`;
@@ -52,7 +58,10 @@ function Content() {
   const urlItems = idProduct
     ? `${apiHost}items/${idProduct}${pageQuery}${pageSizeQuery}${orderByQuery}`
     : "";
-  const { data, mutate } = useSWR<ResponseData>(urlItems, fetcher);
+  const { data: dataItems, mutate: mutateItems } = useSWR<ItemsData>(
+    urlItems,
+    fetcher
+  );
 
   const urlLowHiPrices = `${apiHost}products/lowHiPrice`;
   const requestBody = {
@@ -84,7 +93,7 @@ function Content() {
   const clipboard = useClipboard();
 
   useEffect(() => {
-    if (data?.updating) {
+    if (dataItems?.updating) {
       notifications.show({
         id: "updating-data",
         title: "Actualizando producto",
@@ -104,7 +113,8 @@ function Content() {
           icon: <IconCheck />,
           autoClose: 5000,
         });
-        mutate({ ...data, updating: false });
+        mutateProduct({ ...dataProduct! });
+        mutateItems({ ...dataItems, updating: false });
       }, 120 * 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -130,25 +140,32 @@ function Content() {
     return position + offset;
   }
 
+  function getDateFormatted(date: string) {
+    if (compareAsc(new Date(date), new Date(2023, 1, 1)) === -1) return "Nunca";
+    return format(new Date(date), "PPP", {
+      locale: es,
+    });
+  }
+
   return (
     <>
       <Head>
-        {data ? (
+        {dataProduct ? (
           <>
-            <title>{`${data.product.name} - PricePro`}</title>
+            <title>{`${dataProduct.product.name} - PricePro`}</title>
             <meta
               property="og:title"
-              content={`${data.product.name} - PricePro`}
+              content={`${dataProduct.product.name} - PricePro`}
               key="og:title"
             />
             <meta
               name="description"
-              content={`Encuentra los precios más baratos de ${data.product.name} en PricePro`}
+              content={`Encuentra los precios más baratos de ${dataProduct.product.name} en PricePro`}
               key="description"
             />
             <meta
               property="og:description"
-              content={`Encuentra los precios más baratos de ${data.product.name} en PricePro`}
+              content={`Encuentra los precios más baratos de ${dataProduct.product.name} en PricePro`}
               key="og:description"
             />
             <meta
@@ -157,7 +174,10 @@ function Content() {
               key="og:url"
             />
 
-            <meta property="og:image" content={`${data.product.imgUrl}.jpg`} />
+            <meta
+              property="og:image"
+              content={`${dataProduct.product.imgUrl}.jpg`}
+            />
           </>
         ) : (
           <>
@@ -171,7 +191,7 @@ function Content() {
         )}
       </Head>
       <Flex direction="column" align="center" mt={10}>
-        {data ? (
+        {dataProduct ? (
           <>
             <Card
               bg="transparent"
@@ -208,34 +228,34 @@ function Content() {
                   <MediaQuery largerThan="md" styles={{ display: "none" }}>
                     <Image
                       radius="lg"
-                      src={data.product.imgUrl}
+                      src={dataProduct.product.imgUrl}
                       height={200}
                       placeholder={<PlaceholderImg />}
                       withPlaceholder
-                      alt={data.product.name}
+                      alt={dataProduct.product.name}
                     ></Image>
                   </MediaQuery>
                   <MediaQuery smallerThan="md" styles={{ display: "none" }}>
                     <Image
                       radius="lg"
                       height={400}
-                      src={data.product.imgUrl}
+                      src={dataProduct.product.imgUrl}
                       placeholder={<PlaceholderImg />}
                       withPlaceholder
-                      alt={data.product.name}
+                      alt={dataProduct.product.name}
                     ></Image>
                   </MediaQuery>
                 </Grid.Col>
                 <Grid.Col span={12} xs={7}>
                   <Text fw={200} fz={12}>
-                    Actualizado en{" "}
-                    {format(new Date(data.product.lastUpdate), "PPP", {
-                      locale: es,
-                    })}
+                    Actualizado{" "}
+                    {getDateFormatted(dataProduct.product.lastUpdate)}
                   </Text>
-                  <Badge color="teal">{data.product.subcategory.name}</Badge>
-                  <Title>{data.product.name}</Title>
-                  <Text>{data.product.description}</Text>
+                  <Badge color="teal">
+                    {dataProduct.product.subcategory.name}
+                  </Badge>
+                  <Title>{dataProduct.product.name}</Title>
+                  <Text>{dataProduct.product.description}</Text>
                   <Group position="apart" maw={250}>
                     <Text color="green">Más barato</Text>
                     <Group spacing="xs">
@@ -246,7 +266,7 @@ function Content() {
                           : itemLowestPrice?.list[0]?.price}
                       </Text>
                       {order === "pricePerUnit" && (
-                        <Text>por {data?.product.units}</Text>
+                        <Text>por {dataProduct.product.units}</Text>
                       )}
                     </Group>
                   </Group>
@@ -260,7 +280,7 @@ function Content() {
                           : itemHighestPrice?.list[0]?.price}
                       </Text>
                       {order === "pricePerUnit" && (
-                        <Text>por {data.product.units}</Text>
+                        <Text>por {dataProduct.product.units}</Text>
                       )}
                     </Group>
                   </Group>
@@ -284,9 +304,9 @@ function Content() {
             </Card>
             <Flex justify="space-between" direction="column" gap="lg" h="100%">
               <Grid m="1.2rem">
-                {data &&
-                  data.items.length > 0 &&
-                  sort(data.items, order!).map((item, index) => (
+                {dataItems &&
+                  dataItems.items.length > 0 &&
+                  sort(dataItems.items, order!).map((item, index) => (
                     <Grid.Col key={item.id} span={12} xs={6} lg={3} xl={2}>
                       <ItemCard
                         data={item}
@@ -297,9 +317,9 @@ function Content() {
                   ))}
               </Grid>
               <Paginate
-                total={data.metadata.total}
-                pages={data.metadata.pages}
-                current={data.items.length}
+                total={dataItems?.metadata.total}
+                pages={dataItems?.metadata.pages}
+                current={dataItems?.items.length}
               />
             </Flex>
           </>
@@ -312,7 +332,7 @@ function Content() {
 }
 
 const Page: NextPageWithLayout<{
-  props: { fallback: { [k: string]: ResponseData } };
+  props: { fallback: { [k: string]: ItemsData | ProductData } };
 }> = ({ props: { fallback } }) => {
   return (
     <SWRConfig value={{ fallback: fallback }}>
@@ -328,17 +348,21 @@ Page.getInitialProps = async (ctx: NextPageContext) => {
   idProduct = (idProduct as string).split("-")[0];
   const apiHost = process.env.NEXT_PUBLIC_API_HOST;
   let pageQuery = `?page=${Number(page) > 0 ? page : 1}`;
-  const url = `${apiHost}items/${idProduct}${pageQuery}&pagesize=12&orderby=pricePerUnit`;
-  var res: ResponseData;
+  const urlItems = `${apiHost}items/${idProduct}${pageQuery}&pagesize=12&orderby=pricePerUnit`;
+  const urlProduct = `${apiHost}product/${idProduct}`;
+  let resItems: ItemsData;
+  let resProduct: ProductData;
   try {
-    res = await fetcher(url);
+    resProduct = await fetcher(urlProduct);
+    resItems = await fetcher(urlItems);
   } catch (error) {
     console.log(error);
   }
   return {
     props: {
       fallback: {
-        [url]: res,
+        [urlItems]: resItems,
+        [urlProduct]: resProduct,
       },
     },
   };
