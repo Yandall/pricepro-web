@@ -16,7 +16,7 @@ export default function ItemCard({
   return (
     <Card h="100%" style={{ display: "flex", flexDirection: "column" }}>
       <Card.Section>
-        <a href={data.url}>
+        <a href={data.url} target="_blank">
           <Image
             src={data.imageUrl}
             alt={data.name}
@@ -33,7 +33,7 @@ export default function ItemCard({
         style={{ flex: "1 0 auto" }}
       >
         <div>
-          <Text component="a" href={data.url}>
+          <Text component="a" href={data.url} target="_blank">
             {position}. {data.name}
           </Text>
           <Text weight={200} size="sm">
