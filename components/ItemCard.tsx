@@ -1,15 +1,17 @@
 import { Badge, Card, Flex, Image, Text } from "@mantine/core";
-import type { Item } from "@/utils/types";
+import type { Item, Product } from "@/utils/types";
 import StoreIcon from "./StoreIcon";
 
 export type Props = {
   data: Item;
   position: number;
+  product: Product;
   orderBy: "pricePerUnit" | "price";
 };
 
 export default function ItemCard({
   data,
+  product,
   position,
   orderBy = "pricePerUnit",
 }: Props) {
@@ -43,16 +45,16 @@ export default function ItemCard({
             Tienda: <StoreIcon store={data.store.name} />
           </Text>
           <Text weight={200} size="sm">
-            Cantidad: {data.quantity} {data.product.units}
+            Cantidad: {data.quantity} {product.units}
           </Text>
           <Text>
             {orderBy === "pricePerUnit"
               ? `Precio: $${data.price}`
-              : `Precio por ${data.product.units}: $${data.pricePerUnit}`}
+              : `Precio por ${product.units}: $${data.pricePerUnit}`}
           </Text>
           <Text>
             {orderBy === "pricePerUnit"
-              ? `Precio por ${data.product.units}:`
+              ? `Precio por ${product.units}:`
               : "Precio:"}
           </Text>
         </div>

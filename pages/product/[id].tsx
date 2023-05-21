@@ -310,6 +310,7 @@ function Content() {
                     <Grid.Col key={item.id} span={12} xs={6} lg={3} xl={2}>
                       <ItemCard
                         data={item}
+                        product={dataProduct.product}
                         position={getItemPosition(index + 1)}
                         orderBy={order as ItemProps["orderBy"]}
                       />

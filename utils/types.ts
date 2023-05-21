@@ -31,13 +31,13 @@ export type Product = {
 
 export type Item = {
   id: number;
+  product: number;
   name: string;
   url: string;
   imageUrl: string;
   price: number;
   pricePerUnit: number;
   quantity: number;
-  product: Product;
   brand: Brand;
   store: Store;
 };

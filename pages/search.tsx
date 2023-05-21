@@ -122,7 +122,7 @@ function Content() {
                 <ProductCard
                   data={prod}
                   cheapest={dataLowestPrice?.list.find(
-                    (item) => item.product.id === prod.id
+                    (item) => item.product === prod.id
                   )}
                 />
               </Grid.Col>
