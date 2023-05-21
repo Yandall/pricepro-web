@@ -1,6 +1,7 @@
-import { Badge, Card, Flex, Image, Text } from "@mantine/core";
+import { Badge, Card, Flex, Image, Text, Tooltip } from "@mantine/core";
 import type { Item, Product } from "@/utils/types";
 import StoreIcon from "./StoreIcon";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 export type Props = {
   data: Item;
@@ -44,9 +45,17 @@ export default function ItemCard({
           <Text weight={200} size="sm" component={Flex} gap="xs">
             Tienda: <StoreIcon store={data.store.name} />
           </Text>
-          <Text weight={200} size="sm">
-            Cantidad: {data.quantity} {product.units}
-          </Text>
+          <Tooltip
+            multiline
+            label="El valor puede no ser exacto debido a que es calculado como PRECIO/PRECIO-POR-UNIDAD"
+            events={{ focus: true, hover: true, touch: true }}
+            zIndex={100}
+          >
+            <Text weight={200} size="sm" component={Flex} gap="xs">
+              Cantidad: {data.quantity} {product.units}
+              <IconInfoCircle size={16} style={{ alignSelf: "center" }} />
+            </Text>
+          </Tooltip>
           <Text>
             {orderBy === "pricePerUnit"
               ? `Precio: $${data.price}`
