@@ -219,6 +219,8 @@ export default function Page() {
                 data={[
                   { value: "gr", label: "Gramos" },
                   { value: "ml", label: "Mililitros" },
+                  { value: "mt", label: "Metros" },
+                  { value: "und", label: "Unidades" },
                 ]}
                 mb={20}
                 {...form.getInputProps("units")}
