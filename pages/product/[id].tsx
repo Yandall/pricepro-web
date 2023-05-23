@@ -6,6 +6,7 @@ import useSWRImmutable from "swr/immutable";
 import { compareAsc, format } from "date-fns";
 import { es } from "date-fns/locale";
 import {
+  Accordion,
   ActionIcon,
   Badge,
   Card,
@@ -19,7 +20,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { IconCheck, IconShare } from "@tabler/icons-react";
+import { IconChartLine, IconCheck, IconShare } from "@tabler/icons-react";
 import ItemCard, { Props as ItemProps } from "@/components/ItemCard";
 import { useClipboard, useMediaQuery } from "@mantine/hooks";
 import { useEffect, useState } from "react";
@@ -30,6 +31,7 @@ import { notifications } from "@mantine/notifications";
 import { fetcher } from "@/utils/fetcher";
 import type { Product, Item } from "@/utils/types";
 import { Paginate } from "@/components/Paginate";
+import { PriceChart } from "@/components/PriceChart/PriceChart";
 
 type ItemsData =
   | {
@@ -295,10 +297,34 @@ function Content() {
                           label: "Precio por unidad",
                         },
                         { value: "price", label: "Precio" },
-                        // { value: "quantity", label: "Cantidad" },
                       ]}
                     ></Select>
                   </Grid.Col>
+                </Grid.Col>
+                <Grid.Col span={12}>
+                  {dataProduct.product.history.length > 1 && (
+                    <>
+                      <Accordion>
+                        <Accordion.Item value="historyChart">
+                          <Accordion.Control>
+                            <Text component={Flex} gap="xs">
+                              Historial de precios <IconChartLine />
+                            </Text>
+                          </Accordion.Control>
+                          <Accordion.Panel>
+                            <MediaQuery
+                              smallerThan="md"
+                              styles={{ height: "300px !important" }}
+                            >
+                              <PriceChart
+                                history={dataProduct.product.history}
+                              />
+                            </MediaQuery>
+                          </Accordion.Panel>
+                        </Accordion.Item>
+                      </Accordion>
+                    </>
+                  )}
                 </Grid.Col>
               </Grid>
             </Card>

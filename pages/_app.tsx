@@ -11,6 +11,7 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { ReactElement, ReactNode } from "react";
 import { Analytics } from "@vercel/analytics/react";
+import { IsClientCtxProvider } from "@/components/IsClient";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -83,7 +84,9 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
           }}
         >
           <Notifications />
-          {getLayout(<Component {...pageProps} />)}
+          <IsClientCtxProvider>
+            {getLayout(<Component {...pageProps} />)}
+          </IsClientCtxProvider>
           <Analytics />
         </MantineProvider>
       </ColorSchemeProvider>
