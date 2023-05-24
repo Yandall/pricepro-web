@@ -178,7 +178,7 @@ function Content() {
 
             <meta
               property="og:image"
-              content={`${dataProduct.product.imgUrl}.jpg`}
+              content={`${dataProduct.product.imgUrl}`}
             />
           </>
         ) : (
@@ -328,7 +328,13 @@ function Content() {
                 </Grid.Col>
               </Grid>
             </Card>
-            <Flex justify="space-between" direction="column" gap="lg" h="100%">
+            <Flex
+              justify="space-between"
+              direction="column"
+              gap="lg"
+              h="100%"
+              w="100%"
+            >
               <Grid m="1.2rem">
                 {dataItems &&
                   dataItems.items.length > 0 &&
