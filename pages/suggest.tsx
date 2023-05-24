@@ -184,11 +184,12 @@ export default function Page() {
           </Text>
           <List>
             <List.Item>
-              Debe ser un producto que ya no esté en nuestra lista (el
+              Debe ser un producto que no esté en nuestra lista (el
               autocompletador te ayudará a verificar que no exista)
             </List.Item>
             <List.Item>
-              El producto debe tener unidad (gr, ml) para poder ser ordenado
+              El producto debe tener unidad (gr, ml, mt, und) para poder ser
+              ordenado
             </List.Item>
             <List.Item>
               El producto debe existir en al menos tres tiendas que esten
