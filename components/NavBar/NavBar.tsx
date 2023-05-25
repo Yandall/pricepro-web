@@ -17,9 +17,8 @@ type Props = Omit<NavbarProps, "children"> & {
 };
 
 export default function NavBar(props: Props) {
-  const apiHost = process.env.NEXT_PUBLIC_API_HOST;
-  const urlSubcategory = `${apiHost}list/subcategory`;
-  const urlCategory = `${apiHost}list/category`;
+  const urlSubcategory = "/api/list/subcategory";
+  const urlCategory = "/api/list/category";
 
   const { data: dataSubcategory } = useSWRImmutable<{ list: Subcategory[] }>(
     urlSubcategory,

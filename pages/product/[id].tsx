@@ -44,12 +44,11 @@ type ItemsData =
 type ProductData = { product: Product } | undefined;
 
 function Content() {
-  const apiHost = process.env.NEXT_PUBLIC_API_HOST;
   const router = useRouter();
   const [order, setOrder] = useState<string | null>("pricePerUnit");
   let { id: idProduct, page } = router.query;
   idProduct = (idProduct as string).split("-")[0];
-  const urlProduct = `${apiHost}product/${idProduct}`;
+  const urlProduct = `/api/product/${idProduct}`;
   const { data: dataProduct, mutate: mutateProduct } =
     useSWRImmutable<ProductData>(urlProduct, fetcher);
 
@@ -58,19 +57,20 @@ function Content() {
   const pageSizeQuery = `&pagesize=${isViewPortXl ? 24 : 12}`;
   const orderByQuery = `&orderby=${order}`;
   const urlItems = idProduct
-    ? `${apiHost}items/${idProduct}${pageQuery}${pageSizeQuery}${orderByQuery}`
+    ? `/api/items/${idProduct}${pageQuery}${pageSizeQuery}${orderByQuery}`
     : "";
   const { data: dataItems, mutate: mutateItems } = useSWR<ItemsData>(
     urlItems,
     fetcher
   );
 
-  const urlLowHiPrices = `${apiHost}products/lowHiPrice`;
+  const urlLowHiPrices = `/api/products/lowHiPrice`;
   const requestBody = {
     orderBy: order,
     products: [Number(idProduct)],
     lowest: true,
   };
+
   const { data: itemLowestPrice } = useSWR<{ list: Item[] }>(
     [
       urlLowHiPrices,
@@ -365,8 +365,8 @@ function Content() {
 }
 
 const Page: NextPageWithLayout<{
-  props: { fallback: { [k: string]: ItemsData | ProductData } };
-}> = ({ props: { fallback } }) => {
+  fallback: { [k: string]: ItemsData | ProductData };
+}> = ({ fallback }) => {
   return (
     <SWRConfig value={{ fallback: fallback }}>
       <Content />
@@ -376,13 +376,15 @@ const Page: NextPageWithLayout<{
 
 Page.getLayout = getLayout;
 
-Page.getInitialProps = async (ctx: NextPageContext) => {
+export async function getServerSideProps(ctx: NextPageContext) {
   let { id: idProduct, page } = ctx.query;
   idProduct = (idProduct as string).split("-")[0];
-  const apiHost = process.env.NEXT_PUBLIC_API_HOST;
-  let pageQuery = `?page=${Number(page) > 0 ? page : 1}`;
-  const urlItems = `${apiHost}items/${idProduct}${pageQuery}&pagesize=12&orderby=pricePerUnit`;
-  const urlProduct = `${apiHost}product/${idProduct}`;
+  const apiHost = process.env.API_HOST;
+  const pageQuery = `?page=${Number(page) > 0 ? page : 1}`;
+  const endpointItems = `items/${idProduct}${pageQuery}&pagesize=12&orderby=pricePerUnit`;
+  const endpointProduct = `product/${idProduct}`;
+  const urlProduct = `${apiHost}${endpointProduct}`;
+  const urlItems = `${apiHost}${endpointItems}`;
   let resItems: ItemsData;
   let resProduct: ProductData;
   try {
@@ -394,11 +396,11 @@ Page.getInitialProps = async (ctx: NextPageContext) => {
   return {
     props: {
       fallback: {
-        [urlItems]: resItems,
-        [urlProduct]: resProduct,
+        [`/api/${endpointItems}`]: resItems,
+        [`/api/${endpointProduct}`]: resProduct,
       },
     },
   };
-};
+}
 
 export default Page;

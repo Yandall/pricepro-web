@@ -61,7 +61,6 @@ async function insertSuggestion(url: string, { arg }: { arg: SuggestionDTO }) {
 }
 
 export default function Page() {
-  const apiHost = process.env.NEXT_PUBLIC_API_HOST;
   const form = useForm<SuggestionDTO>({
     initialValues: {
       name: "",
@@ -90,19 +89,19 @@ export default function Page() {
   const { name: productQuery } = form.values;
 
   const { data: subcategoryData } = useSWR<{ list: Subcategory[] }>(
-    `${apiHost}list/subcategory`,
+    `/api/list/subcategory`,
     fetcher
   );
 
-  const suggestionURL = `${apiHost}products/suggest`;
+  const suggestionURL = `/api/products/suggest`;
   const { trigger: sendSuggestion } = useSWRMutation(
     suggestionURL,
     insertSuggestion
   );
 
   useEffect(() => {
-    setProductUrl(`${apiHost}products/search?search=${productQuery}`);
-  }, [productQuery, apiHost]);
+    setProductUrl(`/api/products/search?search=${productQuery}`);
+  }, [productQuery]);
 
   async function submitSuggestion(values: SuggestionDTO) {
     if (form.validate().hasErrors) return;
