@@ -19,13 +19,12 @@ type ResponseData =
 
 function Content() {
   const router = useRouter();
-  const apiHost = process.env.NEXT_PUBLIC_API_HOST;
   const query = router.query;
   const pageQuery = `&page=${Number(query.page) > 0 ? query.page : 1}`;
   const subcategoryQuery = query.subcategory
     ? `&subcategory=${query.subcategory}`
     : "";
-  const urlProducts = `${apiHost}products/search?search=${
+  const urlProducts = `/api/products/search?search=${
     query.q || ""
   }${pageQuery}${subcategoryQuery}`;
 
@@ -39,9 +38,7 @@ function Content() {
     products: data?.list.map((p) => p.id),
     lowest: true,
   };
-  const urlLowestPrice = requestBody.products
-    ? `${apiHost}products/lowHiPrice`
-    : "";
+  const urlLowestPrice = requestBody.products ? `/api/products/lowHiPrice` : "";
   const { data: dataLowestPrice } = useSWRImmutable<{ list: Item[] }>(
     [
       urlLowestPrice,
@@ -122,7 +119,7 @@ function Content() {
                 <ProductCard
                   data={prod}
                   cheapest={dataLowestPrice?.list.find(
-                    (item) => item.product.id === prod.id
+                    (item) => item.product === prod.id
                   )}
                 />
               </Grid.Col>
@@ -159,12 +156,13 @@ Page.getLayout = getLayout;
 
 Page.getInitialProps = async (ctx: NextPageContext) => {
   const { q: searchQuery, page, subcategory } = ctx.query;
-  const apiHost = process.env.NEXT_PUBLIC_API_HOST;
+  const apiHost = process.env.API_HOST;
   const pageQuery = `&page=${Number(page) > 0 ? page : 1}`;
   const subcategoryQuery = subcategory ? `&subcategory=${subcategory}` : "";
-  const url = `${apiHost}products/search?search=${
+  const endpoint = `products/search?search=${
     searchQuery || ""
   }${pageQuery}${subcategoryQuery}`;
+  const url = `${apiHost}${endpoint}`;
   let res: ResponseData;
   try {
     res = await fetcher(url);
@@ -174,7 +172,7 @@ Page.getInitialProps = async (ctx: NextPageContext) => {
   return {
     props: {
       fallback: {
-        [url]: res,
+        [`/api/${endpoint}`]: res,
       },
     },
   };

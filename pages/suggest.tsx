@@ -61,7 +61,6 @@ async function insertSuggestion(url: string, { arg }: { arg: SuggestionDTO }) {
 }
 
 export default function Page() {
-  const apiHost = process.env.NEXT_PUBLIC_API_HOST;
   const form = useForm<SuggestionDTO>({
     initialValues: {
       name: "",
@@ -90,19 +89,19 @@ export default function Page() {
   const { name: productQuery } = form.values;
 
   const { data: subcategoryData } = useSWR<{ list: Subcategory[] }>(
-    `${apiHost}list/subcategory`,
+    `/api/list/subcategory`,
     fetcher
   );
 
-  const suggestionURL = `${apiHost}products/suggest`;
+  const suggestionURL = `/api/products/suggest`;
   const { trigger: sendSuggestion } = useSWRMutation(
     suggestionURL,
     insertSuggestion
   );
 
   useEffect(() => {
-    setProductUrl(`${apiHost}products/search?search=${productQuery}`);
-  }, [productQuery, apiHost]);
+    setProductUrl(`/api/products/search?search=${productQuery}`);
+  }, [productQuery]);
 
   async function submitSuggestion(values: SuggestionDTO) {
     if (form.validate().hasErrors) return;
@@ -184,11 +183,12 @@ export default function Page() {
           </Text>
           <List>
             <List.Item>
-              Debe ser un producto que ya no esté en nuestra lista (el
+              Debe ser un producto que no esté en nuestra lista (el
               autocompletador te ayudará a verificar que no exista)
             </List.Item>
             <List.Item>
-              El producto debe tener unidad (gr, ml) para poder ser ordenado
+              El producto debe tener unidad (gr, ml, mt, und) para poder ser
+              ordenado
             </List.Item>
             <List.Item>
               El producto debe existir en al menos tres tiendas que esten
@@ -219,6 +219,8 @@ export default function Page() {
                 data={[
                   { value: "gr", label: "Gramos" },
                   { value: "ml", label: "Mililitros" },
+                  { value: "mt", label: "Metros" },
+                  { value: "und", label: "Unidades" },
                 ]}
                 mb={20}
                 {...form.getInputProps("units")}

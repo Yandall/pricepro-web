@@ -22,7 +22,7 @@ export default function ProductCard({
       style={{ display: "flex", flexDirection: "column" }}
     >
       <Card.Section style={{ flex: "1 1 60%" }} pos="relative">
-        <Link href={`/product/${data.id}-${data.name}`}>
+        <Link href={`/product/${data.id}-${data.name.replaceAll(" ", "_")}`}>
           <Image
             src={data.imgUrl !== "" ? data.imgUrl : undefined}
             alt={data.name}
@@ -46,7 +46,7 @@ export default function ProductCard({
         <Text
           weight={700}
           component={Link}
-          href={`/product/${data.id}-${data.name}`}
+          href={`/product/${data.id}-${data.name.replaceAll(" ", "_")}`}
         >
           {data.name}
         </Text>

@@ -24,7 +24,11 @@ export default function StoreIcon({ store, size }: Props) {
       break;
   }
   return (
-    <Tooltip style={{ display: "flex", gap: "0.5rem" }} label={store}>
+    <Tooltip
+      style={{ display: "flex", gap: "0.5rem" }}
+      label={store}
+      events={{ focus: true, hover: true, touch: true }}
+    >
       {icon && (
         <Image
           src={icon.src}

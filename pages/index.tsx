@@ -25,6 +25,7 @@ import Image from "next/image";
 import NavList from "@/components/NavBar/NavList";
 import {
   IconAlertCircle,
+  IconChartLine,
   IconPigMoney,
   IconSearch,
   IconTextPlus,
@@ -153,6 +154,22 @@ export default function Home() {
                 presentada
               </Text>
               <Group align="baseline" noWrap>
+                <IconChartLine className={styles.promotionSectionIcons} />
+                <Text
+                  component="h1"
+                  className={`${styles.promotionSectionHeadings} ${poppins.className}`}
+                >
+                  Analiza
+                </Text>
+              </Group>
+              <Text
+                className={`${styles.promotionSectionDescription} ${poppins.className}`}
+              >
+                PricePro te presenta un historial de los precios más bajos y
+                también uno para cada producto. Asi podrás verificar con tus
+                propios ojos los verdaderos descuentos.
+              </Text>
+              <Group align="baseline" noWrap>
                 <IconTextPlus className={styles.promotionSectionIcons} />
                 <Text
                   component="h1"
@@ -164,7 +181,7 @@ export default function Home() {
               <Text
                 className={`${styles.promotionSectionDescription} ${poppins.className}`}
               >
-                No te preocupes. Añadir un producto a PricePro es muy sencillo.
+                ¡No te preocupes! Añadir un producto a PricePro es muy sencillo.
                 Solo sigue los pasos al llenar el{" "}
                 <Text
                   span

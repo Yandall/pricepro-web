@@ -1,3 +1,9 @@
+export type History = {
+  date: string;
+  price: number;
+  pricePerUnit: number;
+};
+
 export type Category = {
   id: number;
   name: string;
@@ -27,19 +33,21 @@ export type Product = {
   imgUrl: string;
   lastUpdate: string;
   subcategory: Subcategory;
+  history: History[];
 };
 
 export type Item = {
   id: number;
+  product: number;
   name: string;
   url: string;
   imageUrl: string;
   price: number;
   pricePerUnit: number;
   quantity: number;
-  product: Product;
   brand: Brand;
   store: Store;
+  history: History[];
 };
 
 export type Suggestion = {
