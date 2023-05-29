@@ -34,7 +34,7 @@ export default function ItemCard({
     <>
       <Card h="100%" style={{ display: "flex", flexDirection: "column" }}>
         <Card.Section>
-          <a href={data.url} target="_blank">
+          <a href={data.url} target="_blank" style={{ textDecoration: "none" }}>
             <Image
               src={data.imageUrl}
               alt={data.name}
@@ -89,7 +89,14 @@ export default function ItemCard({
                 : "Precio:"}
             </Text>
           </div>
-          <Badge size="lg" color="yellow">
+          <Badge
+            size="lg"
+            color="yellow"
+            component="a"
+            href={data.url}
+            target="_blank"
+            style={{ cursor: "pointer" }}
+          >
             ${orderBy === "pricePerUnit" ? data.pricePerUnit : data.price}
           </Badge>
         </Flex>

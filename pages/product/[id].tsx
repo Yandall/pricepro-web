@@ -71,7 +71,9 @@ function Content() {
     lowest: true,
   };
 
-  const { data: itemLowestPrice } = useSWR<{ list: Item[] }>(
+  const { data: itemLowestPrice, mutate: mutateLowestPrice } = useSWR<{
+    list: Item[];
+  }>(
     [
       urlLowHiPrices,
       {
@@ -82,7 +84,9 @@ function Content() {
     ([url, options]: [string, RequestInit]) => fetcher(url, options)
   );
   requestBody.lowest = false;
-  const { data: itemHighestPrice } = useSWR<{ list: Item[] }>(
+  const { data: itemHighestPrice, mutate: mutateHighestPrice } = useSWR<{
+    list: Item[];
+  }>(
     [
       urlLowHiPrices,
       {
@@ -115,9 +119,11 @@ function Content() {
           icon: <IconCheck />,
           autoClose: 5000,
         });
-        mutateProduct({ ...dataProduct! });
+        mutateProduct();
         mutateItems({ ...dataItems, updating: false });
-      }, 60 * 1000);
+        mutateLowestPrice();
+        mutateHighestPrice();
+      }, 40 * 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
