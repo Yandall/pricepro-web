@@ -99,7 +99,7 @@ function Content() {
       notifications.show({
         id: "updating-data",
         title: "Actualizando producto",
-        message: "Datos actualizados en aproximadamente dos minutos",
+        message: "Datos actualizados en aproximadamente un minuto",
         loading: true,
         autoClose: false,
         withCloseButton: true,
@@ -117,7 +117,7 @@ function Content() {
         });
         mutateProduct({ ...dataProduct! });
         mutateItems({ ...dataItems, updating: false });
-      }, 120 * 1000);
+      }, 60 * 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
