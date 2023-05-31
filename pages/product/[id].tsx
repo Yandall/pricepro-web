@@ -209,6 +209,7 @@ function Content() {
               padding="lg"
               w="100%"
               styles={{ "align-items": "center" }}
+              component="section"
             >
               <Grid>
                 <Grid.Col span={12} xs={5}>

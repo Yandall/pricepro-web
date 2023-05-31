@@ -20,6 +20,7 @@ export default function ProductCard({
       mah={380}
       mih="20rem"
       style={{ display: "flex", flexDirection: "column" }}
+      component="article"
     >
       <Card.Section style={{ flex: "1 1 60%" }} pos="relative">
         <Link href={`/product/${data.id}-${data.name.replaceAll(" ", "_")}`}>

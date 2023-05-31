@@ -32,7 +32,11 @@ export default function ItemCard({
   const isMobile = useMediaQuery("(max-width: 50em)");
   return (
     <>
-      <Card h="100%" style={{ display: "flex", flexDirection: "column" }}>
+      <Card
+        h="100%"
+        style={{ display: "flex", flexDirection: "column" }}
+        component="article"
+      >
         <Card.Section>
           <a href={data.url} target="_blank" style={{ textDecoration: "none" }}>
             <Image
