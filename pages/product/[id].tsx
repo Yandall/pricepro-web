@@ -71,7 +71,9 @@ function Content() {
     lowest: true,
   };
 
-  const { data: itemLowestPrice } = useSWR<{ list: Item[] }>(
+  const { data: itemLowestPrice, mutate: mutateLowestPrice } = useSWR<{
+    list: Item[];
+  }>(
     [
       urlLowHiPrices,
       {
@@ -82,7 +84,9 @@ function Content() {
     ([url, options]: [string, RequestInit]) => fetcher(url, options)
   );
   requestBody.lowest = false;
-  const { data: itemHighestPrice } = useSWR<{ list: Item[] }>(
+  const { data: itemHighestPrice, mutate: mutateHighestPrice } = useSWR<{
+    list: Item[];
+  }>(
     [
       urlLowHiPrices,
       {
@@ -99,7 +103,7 @@ function Content() {
       notifications.show({
         id: "updating-data",
         title: "Actualizando producto",
-        message: "Datos actualizados en aproximadamente dos minutos",
+        message: "Datos actualizados en aproximadamente un minuto",
         loading: true,
         autoClose: false,
         withCloseButton: true,
@@ -115,9 +119,11 @@ function Content() {
           icon: <IconCheck />,
           autoClose: 5000,
         });
-        mutateProduct({ ...dataProduct! });
+        mutateProduct();
         mutateItems({ ...dataItems, updating: false });
-      }, 120 * 1000);
+        mutateLowestPrice();
+        mutateHighestPrice();
+      }, 40 * 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -203,6 +209,7 @@ function Content() {
               padding="lg"
               w="100%"
               styles={{ "align-items": "center" }}
+              component="section"
             >
               <Grid>
                 <Grid.Col span={12} xs={5}>

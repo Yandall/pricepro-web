@@ -22,13 +22,20 @@
   width: fit-content;
 }
 
-.heroInfo p {
+/* .heroInfo p {
   color: white;
   padding-inline: 3rem;
-}
+} */
 
 .heroInfo a {
   padding-inline: 6rem;
+}
+
+.heroInfo img {
+  max-width: 500px;
+  height: auto;
+  width: 100%;
+  min-width: 250px;
 }
 
 .heroImg {

@@ -6,13 +6,13 @@ import {
   Grid,
   Group,
   Header,
+  Image,
   MediaQuery,
-  Text,
   TextInput,
   useMantineTheme,
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useState } from "react";
 import { useForm } from "@mantine/form";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -20,6 +20,7 @@ import NavList from "./NavBar/NavList";
 import NavBar from "./NavBar/NavBar";
 import ColorSchemeToggle from "./ColorSchemeToggle";
 import MainFooter from "./Footer";
+import priceproTitle from "@/public/pricepro_title.webp";
 
 export default function MainLayout({ children }: { children: ReactElement }) {
   const router = useRouter();
@@ -28,22 +29,9 @@ export default function MainLayout({ children }: { children: ReactElement }) {
       query: "",
     },
   });
+
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
-
-  const { q: query } = router.query;
-  const { route } = router;
-  const { setValues: setFormValues } = searchForm;
-
-  useEffect(() => {
-    if (query) {
-      setFormValues({ query: query as string });
-    }
-  }, [query, setFormValues]);
-
-  useEffect(() => {
-    setOpened(false);
-  }, [setOpened, route]);
 
   function searchHandler(data: { query: string }) {
     let path = `/search`;
@@ -109,16 +97,20 @@ export default function MainLayout({ children }: { children: ReactElement }) {
               </MediaQuery>
               <Grid.Col span={10} sm={3} lg={2}>
                 <Center>
-                  <Text
-                    style={{
-                      fontWeight: 700,
-                      fontSize: "1.625rem",
-                      lineHeight: "1.35",
-                    }}
-                    component={Link}
+                  <Link
                     href="/"
+                    style={{
+                      display: "inherit",
+                      alignItems: "center",
+                      textDecoration: "none",
+                    }}
                   >
-                    PricePro{" "}
+                    <Image
+                      src={priceproTitle.src}
+                      alt="Pricepro logo"
+                      height="36px"
+                      width="auto"
+                    />
                     <Badge
                       variant="gradient"
                       gradient={{ from: "orange", to: "red", deg: 105 }}
@@ -126,7 +118,7 @@ export default function MainLayout({ children }: { children: ReactElement }) {
                     >
                       Beta
                     </Badge>
-                  </Text>
+                  </Link>
                 </Center>
               </Grid.Col>
               <MediaQuery largerThan="sm" styles={{ display: "none" }}>
@@ -152,6 +144,7 @@ export default function MainLayout({ children }: { children: ReactElement }) {
                     <TextInput
                       placeholder="Buscar producto"
                       {...searchForm.getInputProps("query")}
+                      type="text"
                       icon={<IconSearch />}
                       radius="lg"
                     />

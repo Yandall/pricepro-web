@@ -20,6 +20,7 @@ export default function ProductCard({
       mah={380}
       mih="20rem"
       style={{ display: "flex", flexDirection: "column" }}
+      component="article"
     >
       <Card.Section style={{ flex: "1 1 60%" }} pos="relative">
         <Link href={`/product/${data.id}-${data.name.replaceAll(" ", "_")}`}>
@@ -43,36 +44,35 @@ export default function ProductCard({
         </Link>
       </Card.Section>
       <Container m={0} mt="xs" px={0} style={{ flex: "1 1 40%" }}>
-        <Text
-          weight={700}
-          component={Link}
+        <Link
           href={`/product/${data.id}-${data.name.replaceAll(" ", "_")}`}
+          style={{ textDecoration: "none", color: "inherit" }}
         >
-          {data.name}
-        </Text>
-        <Text weight={200}>
-          Unidades:{" "}
-          <Text weight={400} span>
-            {data.units}
+          <Text weight={700}>{data.name}</Text>
+          <Text weight={200}>
+            Unidades:{" "}
+            <Text weight={400} span>
+              {data.units}
+            </Text>
           </Text>
-        </Text>
 
-        {cheapest && (
-          <Text weight={200} component={Flex} gap="xs">
-            Mejor precio:
-            <StoreIcon store={cheapest.store.name} />
-          </Text>
-        )}
-
-        <Badge
-          color="teal"
-          component={Link}
-          href={`/search?subcategory=${data.subcategory.id}`}
-          style={{ cursor: "pointer" }}
-        >
-          {data.subcategory.name}
-        </Badge>
+          {cheapest && (
+            <Text weight={200} component={Flex} gap="xs">
+              Mejor precio:
+              <StoreIcon store={cheapest.store.name} />
+            </Text>
+          )}
+        </Link>
       </Container>
+      <Badge
+        color="teal"
+        component={Link}
+        fullWidth
+        href={`/search?subcategory=${data.subcategory.id}`}
+        style={{ cursor: "pointer" }}
+      >
+        {data.subcategory.name}
+      </Badge>
     </Card>
   );
 }
