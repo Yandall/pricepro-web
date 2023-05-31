@@ -1,6 +1,13 @@
 # Changelog
 
-## v0.1-beta
+## Patch v0.1.1-beta
+
+- Change update notification time from 2 min to 1 min
+- Change product card and item card to have a bigger anchor tag
+- Change some components to use semantic elements
+- Added new PricePro brand images
+
+## Release v0.1-beta
 
 First major release of PricePro. Features
 
