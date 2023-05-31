@@ -34,8 +34,10 @@ import MainFooter from "@/components/Footer";
 import { useLocalStorage, useScrollIntoView } from "@mantine/hooks";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import priceproTitle from "@/public/pricepro_title.webp";
 
 const poppins = Poppins({ subsets: ["latin"], weight: "300" });
+const poppinsTitle = Poppins({ subsets: ["latin"], weight: "600" });
 
 export default function Home() {
   const { scrollIntoView, targetRef } = useScrollIntoView<HTMLElement>();
@@ -53,39 +55,29 @@ export default function Home() {
     <>
       <Head>
         <title>PricePro | Encuentra el precio más bajo</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/pricepro_logo.png" />
         <meta
           property="og:image"
           content={`https://pricepro.vercel.app${heroImgPng.src}`}
         />
       </Head>
       <main className={styles.main}>
-        <Flex justify="flex-end" pt="1rem" pr="1rem">
+        <Flex justify="flex-end" p="1rem">
           <NavList style={{ color: "black" }} />
           <ColorSchemeToggle variant="outline" color="dark" />
         </Flex>
         <Grid justify="center" align="center">
           <Grid.Col span={12} md={6} className={styles.heroInfo}>
-            <div>
-              <Text
-                variant="gradient"
-                component="p"
-                gradient={{ from: "teal", to: "black", deg: 45 }}
-                sx={{ fontFamily: "Greycliff CF, sans-serif" }}
-                ta="center"
-                fz={60}
-                fw={700}
-              >
-                PricePro
-              </Text>
+            <div style={{ minWidth: 300, maxWidth: 500, margin: "auto" }}>
+              <Image src={priceproTitle} alt="PricePro" />
               <Text
                 fz={35}
                 fw={700}
                 component="p"
-                className={styles.textShadow}
+                color="#2f7560"
+                className={poppinsTitle.className}
               >
-                Ahorra dinero encontrando los productos más baratos en
-                diferentes tiendas del país
+                Encuentra los precios más baratos
               </Text>
               <Button
                 uppercase
@@ -256,11 +248,9 @@ export default function Home() {
               <Accordion.Panel>
                 <List>
                   <List.Item>
-                    Cada búsqueda cuesta dinero por lo tanto se limita el número
-                    de veces que se actualiza la información de un producto.
-                    Esta actualización ocurre cada 7 días desde la última
-                    actualización, por lo que puede suceder que te encuentres
-                    con información desactualizada
+                    Por temas de economía y rendimiento la información de los
+                    productos se actualiza cada 2 días. Este valor no es fijo y
+                    podría cambiar en el futuro
                   </List.Item>
                   <List.Item>
                     La información puede estar mal. PricePro confía en que la

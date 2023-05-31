@@ -1,12 +1,10 @@
 import { Text, Group, useMantineTheme, Grid } from "@mantine/core";
 import styles from "./Footer.module.css";
-import {
-  IconBrandGithub,
-  IconBrandTwitter,
-  IconCurrencyDollar,
-} from "@tabler/icons-react";
+import { IconBrandGithub, IconBrandTwitter } from "@tabler/icons-react";
 import NavList from "./NavBar/NavList";
 import { ReactNode } from "react";
+import priceproLogo from "@/public/pricepro_logo.png";
+import Image from "next/image";
 
 export default function MainFooter(props: { children?: ReactNode }) {
   const theme = useMantineTheme();
@@ -19,7 +17,7 @@ export default function MainFooter(props: { children?: ReactNode }) {
       <Grid>
         <Grid.Col span={5} sm={3}>
           <Group>
-            <IconCurrencyDollar />
+            <Image src={priceproLogo} alt="PricePro" width={24} />
             <Text fw={600}>
               PricePro{" "}
               <Text span fw={200}>
