@@ -142,9 +142,9 @@ function Content() {
   );
 }
 
-const Page: NextPageWithLayout<{
-  props: { fallback: { [k: string]: ResponseData } };
-}> = ({ props: { fallback } }) => {
+const Page: NextPageWithLayout<{ fallback: { [k: string]: ResponseData } }> = ({
+  fallback,
+}) => {
   return (
     <SWRConfig value={{ fallback: fallback }}>
       <Content />
@@ -154,7 +154,7 @@ const Page: NextPageWithLayout<{
 
 Page.getLayout = getLayout;
 
-Page.getInitialProps = async (ctx: NextPageContext) => {
+export async function getServerSideProps(ctx: NextPageContext) {
   const { q: searchQuery, page, subcategory } = ctx.query;
   const apiHost = process.env.API_HOST;
   const pageQuery = `&page=${Number(page) > 0 ? page : 1}`;
@@ -176,6 +176,6 @@ Page.getInitialProps = async (ctx: NextPageContext) => {
       },
     },
   };
-};
+}
 
 export default Page;
