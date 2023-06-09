@@ -8,6 +8,10 @@ const nextConfig = {
         source: "/api/:path*",
         destination: `${process.env.API_HOST}:path*`,
       },
+      {
+        source: "/sitemap.xml",
+        destination: "/api/sitemap",
+      },
     ];
   },
 };
