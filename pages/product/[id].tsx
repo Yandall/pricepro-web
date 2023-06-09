@@ -348,6 +348,7 @@ function Content() {
                             >
                               <PriceChart
                                 history={dataProduct.product.history}
+                                style={{ maxHeight: "50vh" }}
                               />
                             </MediaQuery>
                           </Accordion.Panel>
