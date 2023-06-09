@@ -25,7 +25,7 @@ export default async function handler(
   products.forEach((product) => {
     productUrls += `
     <url>
-      <loc>${host}/product/${product.id}-${product.name
+      <loc>https://${host}/product/${product.id}-${product.name
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .replaceAll(" ", "_")}</loc>
@@ -37,15 +37,15 @@ export default async function handler(
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"> 
     <url>
-      <loc>${host}</loc>
+      <loc>https://${host}/</loc>
       <lastmod>${new Date()}</lastmod>
     </url>
     <url>
-      <loc>${host}/search</loc>
+      <loc>https://${host}/search</loc>
       <lastmod>${new Date()}</lastmod>
     </url>
     <url>
-      <loc>${host}/suggest</loc>
+      <loc>https://${host}/suggest</loc>
       <lastmod>${new Date()}</lastmod>
     </url>
     ${productUrls}
