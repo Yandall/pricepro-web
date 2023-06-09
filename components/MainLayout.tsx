@@ -12,7 +12,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
-import { ReactElement, useState } from "react";
+import { ReactElement, memo, useState } from "react";
 import { useForm } from "@mantine/form";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -22,7 +22,11 @@ import ColorSchemeToggle from "./ColorSchemeToggle";
 import MainFooter from "./Footer";
 import priceproTitle from "@/public/pricepro_title.webp";
 
-export default function MainLayout({ children }: { children: ReactElement }) {
+export const MainLayout = memo(function MainLayout({
+  children,
+}: {
+  children: ReactElement;
+}) {
   const router = useRouter();
   const searchForm = useForm({
     initialValues: {
@@ -166,12 +170,10 @@ export default function MainLayout({ children }: { children: ReactElement }) {
         }
         navbar={
           <NavBar
-            width={{ sm: 200, lg: 300 }}
             p="md"
             hidden={!opened}
             setHidden={setOpened}
             hiddenBreakpoint="sm"
-            style={{ overflow: "auto", position: "sticky" }}
           />
         }
         footer={<MainFooter />}
@@ -180,7 +182,7 @@ export default function MainLayout({ children }: { children: ReactElement }) {
       </AppShell>
     </>
   );
-}
+});
 
 export function getLayout(page: ReactElement) {
   return <MainLayout>{page}</MainLayout>;
