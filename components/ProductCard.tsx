@@ -23,7 +23,12 @@ export default function ProductCard({
       component="article"
     >
       <Card.Section style={{ flex: "1 1 60%" }} pos="relative">
-        <Link href={`/product/${data.id}-${data.name.replaceAll(" ", "_")}`}>
+        <Link
+          href={`/product/${data.id}-${data.name
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replaceAll(" ", "_")}`}
+        >
           <Image
             src={data.imgUrl !== "" ? data.imgUrl : undefined}
             alt={data.name}
@@ -45,7 +50,10 @@ export default function ProductCard({
       </Card.Section>
       <Container m={0} mt="xs" px={0} style={{ flex: "1 1 40%" }}>
         <Link
-          href={`/product/${data.id}-${data.name.replaceAll(" ", "_")}`}
+          href={`/product/${data.id}-${data.name
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replaceAll(" ", "_")}`}
           style={{ textDecoration: "none", color: "inherit" }}
         >
           <Text weight={700}>{data.name}</Text>
