@@ -2,7 +2,7 @@ import { Group } from "@mantine/core";
 import { useRouter } from "next/router";
 import styles from "./NavList.module.css";
 import NavLink, { NavLinkProps } from "./NavLink";
-import { CSSProperties } from "react";
+import { CSSProperties, memo } from "react";
 
 type Props = {
   className?: string;
@@ -10,7 +10,7 @@ type Props = {
   style?: CSSProperties;
 };
 
-export default function NavList(props: Props) {
+export default memo(function NavList(props: Props) {
   const router = useRouter();
   const linkList: NavLinkProps[] = [
     {
@@ -50,4 +50,4 @@ export default function NavList(props: Props) {
       </Group>
     </>
   );
-}
+});

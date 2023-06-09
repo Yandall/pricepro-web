@@ -2,11 +2,11 @@ import { Text, Group, useMantineTheme, Grid } from "@mantine/core";
 import styles from "./Footer.module.css";
 import { IconBrandGithub, IconBrandTwitter } from "@tabler/icons-react";
 import NavList from "./NavBar/NavList";
-import { ReactNode } from "react";
+import { ReactNode, memo } from "react";
 import priceproLogo from "@/public/pricepro_logo.png";
 import Image from "next/image";
 
-export default function MainFooter(props: { children?: ReactNode }) {
+export default memo(function MainFooter(props: { children?: ReactNode }) {
   const theme = useMantineTheme();
   return (
     <footer
@@ -48,4 +48,4 @@ export default function MainFooter(props: { children?: ReactNode }) {
       </Grid>
     </footer>
   );
-}
+});

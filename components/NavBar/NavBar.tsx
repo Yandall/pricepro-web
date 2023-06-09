@@ -11,12 +11,13 @@ import type { Subcategory, Category } from "@/utils/types";
 import { fetcher } from "@/utils/fetcher";
 import Link from "next/link";
 import { Dispatch, SetStateAction } from "react";
+import { memo } from "react";
 
 type Props = Omit<NavbarProps, "children"> & {
   setHidden?: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function NavBar(props: Props) {
+export default memo(function NavBar(props: Props) {
   const urlSubcategory = "/api/list/subcategory";
   const urlCategory = "/api/list/category";
 
@@ -43,7 +44,11 @@ export default function NavBar(props: Props) {
   const toCopyProps = { ...props };
   delete toCopyProps.setHidden;
   return (
-    <Navbar {...toCopyProps}>
+    <Navbar
+      width={{ sm: 200, lg: 300 }}
+      style={{ overflow: "auto", position: "sticky" }}
+      {...toCopyProps}
+    >
       <Title order={3} mb="1rem">
         Categorías
       </Title>
@@ -76,4 +81,4 @@ export default function NavBar(props: Props) {
       </Accordion>
     </Navbar>
   );
-}
+});

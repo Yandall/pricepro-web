@@ -32,6 +32,7 @@ import { fetcher } from "@/utils/fetcher";
 import type { Product, Item } from "@/utils/types";
 import { Paginate } from "@/components/Paginate";
 import { PriceChart } from "@/components/PriceChart/PriceChart";
+import StoreIcon from "@/components/StoreIcon";
 
 type ItemsData =
   | {
@@ -265,28 +266,50 @@ function Content() {
                   </Badge>
                   <Title>{dataProduct.product.name}</Title>
                   <Text>{dataProduct.product.description}</Text>
-                  <Group position="apart" maw={250}>
+                  <Group position="apart" maw={300}>
                     <Text color="green">Más barato</Text>
                     <Group spacing="xs">
-                      <Text weight={700} size="xl">
+                      <Text
+                        weight={700}
+                        size="xl"
+                        component={Flex}
+                        gap="xs"
+                        style={{ alignItems: "center" }}
+                      >
                         $
                         {order === "pricePerUnit"
                           ? itemLowestPrice?.list[0]?.pricePerUnit
                           : itemLowestPrice?.list[0]?.price}
+                        {itemLowestPrice?.list[0] && (
+                          <StoreIcon
+                            store={itemLowestPrice.list[0].store.name}
+                          />
+                        )}
                       </Text>
                       {order === "pricePerUnit" && (
                         <Text>por {dataProduct.product.units}</Text>
                       )}
                     </Group>
                   </Group>
-                  <Group position="apart" maw={250}>
+                  <Group position="apart" maw={300}>
                     <Text color="red">Más caro</Text>
                     <Group spacing="xs">
-                      <Text weight={700} size="xl">
+                      <Text
+                        weight={700}
+                        size="xl"
+                        component={Flex}
+                        gap="xs"
+                        style={{ alignItems: "center" }}
+                      >
                         $
                         {order === "pricePerUnit"
                           ? itemHighestPrice?.list[0]?.pricePerUnit
                           : itemHighestPrice?.list[0]?.price}
+                        {itemHighestPrice?.list[0] && (
+                          <StoreIcon
+                            store={itemHighestPrice.list[0].store.name}
+                          />
+                        )}
                       </Text>
                       {order === "pricePerUnit" && (
                         <Text>por {dataProduct.product.units}</Text>
@@ -325,6 +348,7 @@ function Content() {
                             >
                               <PriceChart
                                 history={dataProduct.product.history}
+                                style={{ maxHeight: "50vh" }}
                               />
                             </MediaQuery>
                           </Accordion.Panel>

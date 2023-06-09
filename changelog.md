@@ -1,5 +1,12 @@
 # Changelog
 
+## Patch v0.1.2-beta
+
+- Change max height for product price chart
+- Added store icon for lowest and highest price in product info
+- Use memo for footer, navbar and navlist for better performance
+- Fixed bug with fetch in search page by using `getServerSideProps()`
+
 ## Patch v0.1.1-beta
 
 - Change update notification time from 2 min to 1 min
