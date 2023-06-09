@@ -68,6 +68,10 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         <meta property="twitter:card" content="summary" />
         <meta property="twitter:url" content="https://pricepro.vercel.app" />
         <meta property="twitter:site" content="@priceproapp"></meta>
+        <meta
+          name="google-site-verification"
+          content="jXNXNIoNpVIC_MJm1THRaC823vFRLW_yVEPIwj3NbiI"
+        />
       </Head>
       <ColorSchemeProvider
         colorScheme={colorScheme}
