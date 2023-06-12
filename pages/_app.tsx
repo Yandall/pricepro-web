@@ -35,6 +35,8 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
     <>
       <Head>
         <title>Page title</title>
+        {/* <link rel="icon" href="/pricepro_logo.png" /> */}
+
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
