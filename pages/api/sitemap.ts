@@ -28,7 +28,7 @@ export default async function handler(
       <loc>https://${host}/product/${product.id}-${product.name
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
-      .replaceAll(" ", "_")}</loc>
+      .replaceAll(" ", "-")}</loc>
       <lastmod>${new Date().toISOString()}</lastmod>
     </url>
     `;

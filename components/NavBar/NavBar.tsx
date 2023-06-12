@@ -49,7 +49,7 @@ export default memo(function NavBar(props: Props) {
       style={{ overflow: "auto", position: "sticky" }}
       {...toCopyProps}
     >
-      <Title order={3} mb="1rem">
+      <Title order={2} mb="1rem" fw={600} fz={22}>
         Categorías
       </Title>
       <Accordion>
@@ -57,7 +57,11 @@ export default memo(function NavBar(props: Props) {
           categoryList.length > 0 &&
           categoryList.map((category) => (
             <Accordion.Item value={category.name} key={category.id}>
-              <Accordion.Control>{category.name}</Accordion.Control>
+              <Accordion.Control>
+                <Title order={3} fw={400} fz={18}>
+                  {category.name}
+                </Title>
+              </Accordion.Control>
               <Accordion.Panel>
                 <Flex wrap="wrap" gap="sm">
                   {category.subcategories
