@@ -55,6 +55,8 @@ export default function Home() {
     <>
       <Head>
         <title>PricePro | Encuentra el precio más bajo</title>
+        <link rel="canonical" href="https://pricepro.vercel.app/" />
+
         <meta
           property="og:image"
           content={`https://pricepro.vercel.app${heroImgPng.src}`}

@@ -162,6 +162,10 @@ function Content() {
         {dataProduct ? (
           <>
             <title>{`${dataProduct.product.name} - PricePro`}</title>
+            <link
+              rel="canonical"
+              href={`https://pricepro.vercel.app/product/${router.query.id}`}
+            />
             <meta
               property="og:title"
               content={`${dataProduct.product.name} - PricePro`}
@@ -416,8 +420,8 @@ export async function getServerSideProps(ctx: NextPageContext) {
   const endpointProduct = `product/${idProduct}`;
   const urlProduct = `${apiHost}${endpointProduct}`;
   const urlItems = `${apiHost}${endpointItems}`;
-  let resItems: ItemsData;
-  let resProduct: ProductData;
+  let resItems: ItemsData = null!;
+  let resProduct: ProductData = null!;
   try {
     resProduct = await fetcher(urlProduct);
     resItems = await fetcher(urlItems);

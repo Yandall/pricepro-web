@@ -60,6 +60,7 @@ function Content() {
     <>
       <Head>
         <title>{`${query.q || "Productos"} - PricePro`}</title>
+        <link rel="canonical" href="https://pricepro.vercel.app/search" />
         <meta
           name="description"
           content="Buscador de productos. Encuentra el precio más barato en diferentes tiendas del país"
