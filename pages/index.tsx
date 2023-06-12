@@ -74,11 +74,11 @@ export default function Home() {
               <Text
                 fz={35}
                 fw={700}
-                component="p"
+                component="h1"
                 color="#2f7560"
                 className={poppinsTitle.className}
               >
-                Encuentra los precios más baratos
+                El mejor comparador de precios de Colombia
               </Text>
               <Button
                 uppercase
@@ -119,7 +119,7 @@ export default function Home() {
               <Group align="baseline" noWrap>
                 <IconSearch className={styles.promotionSectionIcons} />
                 <Text
-                  component="h1"
+                  component="h2"
                   className={`${styles.promotionSectionHeadings} ${poppins.className}`}
                 >
                   No te esfuerces de más
@@ -134,7 +134,7 @@ export default function Home() {
               <Group align="baseline" noWrap>
                 <IconPigMoney className={styles.promotionSectionIcons} />
                 <Text
-                  component="h1"
+                  component="h2"
                   className={`${styles.promotionSectionHeadings} ${poppins.className}`}
                 >
                   Ahorra
@@ -149,7 +149,7 @@ export default function Home() {
               <Group align="baseline" noWrap>
                 <IconChartLine className={styles.promotionSectionIcons} />
                 <Text
-                  component="h1"
+                  component="h2"
                   className={`${styles.promotionSectionHeadings} ${poppins.className}`}
                 >
                   Analiza
@@ -165,7 +165,7 @@ export default function Home() {
               <Group align="baseline" noWrap>
                 <IconTextPlus className={styles.promotionSectionIcons} />
                 <Text
-                  component="h1"
+                  component="h2"
                   className={`${styles.promotionSectionHeadings} ${poppins.className}`}
                 >
                   ¿No encontraste lo que buscabas?
@@ -190,7 +190,7 @@ export default function Home() {
               <Group align="baseline" noWrap>
                 <IconAlertCircle className={styles.promotionSectionIcons} />
                 <Text
-                  component="h1"
+                  component="h2"
                   className={`${styles.promotionSectionHeadings} ${poppins.className}`}
                 >
                   En desarrollo
@@ -234,7 +234,7 @@ export default function Home() {
           >
             <Accordion.Item value="howItWorks">
               <Accordion.Control>
-                <Title order={2}>¿Cómo funciona?</Title>
+                <Title order={3}>¿Cómo funciona?</Title>
               </Accordion.Control>
               <Accordion.Panel>
                 PricePro a partir del nombre de un producto realiza búsquedas en
@@ -244,7 +244,7 @@ export default function Home() {
             </Accordion.Item>
             <Accordion.Item value="limitations">
               <Accordion.Control>
-                <Title order={2}>Limitaciones</Title>
+                <Title order={3}>Limitaciones</Title>
               </Accordion.Control>
               <Accordion.Panel>
                 <List>
@@ -266,7 +266,7 @@ export default function Home() {
             </Accordion.Item>
             <Accordion.Item value="developer">
               <Accordion.Control>
-                <Title order={2}>¿Quién desarrolla PricePro?</Title>
+                <Title order={3}>¿Quién desarrolla PricePro?</Title>
               </Accordion.Control>
               <Accordion.Panel>
                 PricePro lo desarrolla una sola persona en sus tiempos libres.

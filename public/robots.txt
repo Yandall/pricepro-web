@@ -1,0 +1,3 @@
+User-Agent: *
+Allow: /
+Sitemap: https://pricepro.vercel.app/sitemap.xml

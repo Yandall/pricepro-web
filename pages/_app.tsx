@@ -34,8 +34,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <>
       <Head>
-        <title>Page title</title>
-        {/* <link rel="icon" href="/pricepro_logo.png" /> */}
+        <title>PricePro | Comparador de precios</title>
 
         <meta
           name="viewport"
@@ -43,7 +42,8 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         />
         <meta
           name="description"
-          content="Encuentra y compara precios de tiendas en Colombia como exito, carulla, jumbo, etc..."
+          content="PricePro es un comparador de precios de supermercados en Colombia. 
+          Encuentra los mejores precios de éxito, carulla, jumbo, d1 y muchos más."
           key="description"
         />
         <meta name="autor" content="Yandall" />
@@ -58,7 +58,8 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         />
         <meta
           property="og:description"
-          content="Encuentra el precio más bajo en tiendas de Colombia como exito, carulla, jumbo, etc..."
+          content="PricePro es un comparador de precios de supermercados en Colombia. 
+          Encuentra los mejores precios de éxito, carulla, jumbo, d1 y muchos más."
           key="og:description"
         />
         <meta
@@ -74,6 +75,24 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
           name="google-site-verification"
           content="jXNXNIoNpVIC_MJm1THRaC823vFRLW_yVEPIwj3NbiI"
         />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+        <link rel="manifest" href="/site.webmanifest" />
       </Head>
       <ColorSchemeProvider
         colorScheme={colorScheme}

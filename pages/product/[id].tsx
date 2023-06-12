@@ -173,12 +173,12 @@ function Content() {
             />
             <meta
               name="description"
-              content={`Encuentra los precios más baratos de ${dataProduct.product.name} en PricePro`}
+              content={`Compara y encuentra los precios más baratos de ${dataProduct.product.name} en PricePro`}
               key="description"
             />
             <meta
               property="og:description"
-              content={`Encuentra los precios más baratos de ${dataProduct.product.name} en PricePro`}
+              content={`Compara y encuentra los precios más baratos de ${dataProduct.product.name} en PricePro`}
               key="og:description"
             />
             <meta
