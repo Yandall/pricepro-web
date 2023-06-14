@@ -27,7 +27,7 @@ export default function ProductCard({
           href={`/product/${data.id}-${data.name
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "")
-            .replaceAll(" ", "_")}`}
+            .replaceAll(" ", "-")}`}
         >
           <Image
             src={data.imgUrl !== "" ? data.imgUrl : undefined}
@@ -53,10 +53,12 @@ export default function ProductCard({
           href={`/product/${data.id}-${data.name
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "")
-            .replaceAll(" ", "_")}`}
+            .replaceAll(" ", "-")}`}
           style={{ textDecoration: "none", color: "inherit" }}
         >
-          <Text weight={700}>{data.name}</Text>
+          <Text weight={700} component="h3">
+            {data.name}
+          </Text>
           <Text weight={200}>
             Unidades:{" "}
             <Text weight={400} span>

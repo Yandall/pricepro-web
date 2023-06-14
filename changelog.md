@@ -1,5 +1,10 @@
 # Changelog
 
+## Patch v0.1.3-beta
+
+- Improve SEO performance
+- Added `robots.txt` and `sitemap.xml` files
+
 ## Patch v0.1.2-beta
 
 - Change max height for product price chart

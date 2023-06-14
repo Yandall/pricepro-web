@@ -148,6 +148,7 @@ export default function Page() {
     <>
       <Head>
         <title>Sugerir producto | PricePro</title>
+        href={`https://pricepro.vercel.app/suggest`}
         <meta
           name="description"
           content="Sugiere un producto para que sea añadido a PricePro"

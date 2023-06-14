@@ -60,6 +60,7 @@ function Content() {
     <>
       <Head>
         <title>{`${query.q || "Productos"} - PricePro`}</title>
+        <link rel="canonical" href="https://pricepro.vercel.app/search" />
         <meta
           name="description"
           content="Buscador de productos. Encuentra el precio más barato en diferentes tiendas del país"
@@ -96,6 +97,8 @@ function Content() {
                 variant="filled"
                 color="teal"
                 pr={3}
+                component="h2"
+                m={0}
                 rightSection={
                   <ActionIcon
                     size="md"
@@ -112,21 +115,26 @@ function Content() {
               </Badge>
             </Grid.Col>
           )}
-          {data &&
-            data.list.length > 0 &&
-            data.list.map((prod) => (
-              <Grid.Col key={prod.id} span={6} md={4} lg={2.4} xl={2}>
-                <ProductCard
-                  data={prod}
-                  cheapest={dataLowestPrice?.list.find(
-                    (item) => item.product === prod.id
-                  )}
-                />
-              </Grid.Col>
-            ))}
-          {(!data || data.list.length === 0) && (
+          {data && data.list.length > 0 && (
+            <>
+              <Text fw={600} fz={30} ta="center" component="h1" display="none">
+                Productos
+              </Text>
+              {data.list.map((prod) => (
+                <Grid.Col key={prod.id} span={6} md={4} lg={2.4} xl={2}>
+                  <ProductCard
+                    data={prod}
+                    cheapest={dataLowestPrice?.list.find(
+                      (item) => item.product === prod.id
+                    )}
+                  />
+                </Grid.Col>
+              ))}
+            </>
+          )}
+          {(!data || data.list.length === 0) && !isLoading && (
             <Grid.Col span={12}>
-              <Text fw={600} fz={30} ta="center">
+              <Text fw={600} fz={30} ta="center" component="h1">
                 No se encontraron productos
               </Text>
             </Grid.Col>
