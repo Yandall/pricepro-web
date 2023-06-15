@@ -41,4 +41,4 @@ Si encuentras alguna sugerencia parecida pero consideras que es lo suficientemen
 - Screenshot(s) / Sketches de ser necesario. 
 
 ## Personas Contacto
-- [Jhon Steven Agudelo Rodríguez](https://pricepro.vercel.app/)
+- [Jhon Steven Agudelo Rodríguez](https://www.linkedin.com/in/steven-agudelo/)
