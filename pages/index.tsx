@@ -250,7 +250,7 @@ export default function Home() {
                 <List>
                   <List.Item>
                     Por temas de economía y rendimiento la información de los
-                    productos se actualiza cada 2 días. Este valor no es fijo y
+                    productos se actualiza cada 3 días. Este valor no es fijo y
                     podría cambiar en el futuro
                   </List.Item>
                   <List.Item>
