@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
 import useSWR, { SWRConfig } from "swr";
 import useSWRImmutable from "swr/immutable";
+import useSWRMutation from "swr/mutation";
 import { compareAsc, format } from "date-fns";
 import { es } from "date-fns/locale";
 import {
@@ -33,16 +34,24 @@ import type { Product, Item } from "@/utils/types";
 import { Paginate } from "@/components/Paginate";
 import { PriceChart } from "@/components/PriceChart/PriceChart";
 import StoreIcon from "@/components/StoreIcon";
+import isbot from "isbot";
 
 type ItemsData =
   | {
       items: Item[];
-      updating: boolean;
       metadata: { pages: number; total: number };
     }
   | undefined;
 
 type ProductData = { product: Product } | undefined;
+
+type UpdatingData = {
+  isProuctOld: boolean,
+  lastUpdate: string
+} | {
+  productUpdated: boolean,
+  lastUpdate:string
+} | undefined
 
 function Content() {
   const router = useRouter();
@@ -98,19 +107,26 @@ function Content() {
     ([url, options]: [string, RequestInit]) => fetcher(url, options)
   );
   const clipboard = useClipboard();
-
+  const tryUpdateUrl = `/api/product/updateList/${idProduct}`
+  const {trigger: tryUpdate} = useSWRMutation<UpdatingData>(tryUpdateUrl, (url: string) => fetcher(url))
   useEffect(() => {
-    if (dataItems?.updating) {
+    if (isbot(navigator.userAgent)) 
+      return
+    
+    const timeout = setTimeout(() => {
       notifications.show({
-        id: "updating-data",
-        title: "Actualizando producto",
-        message: "Datos actualizados en aproximadamente un minuto",
-        loading: true,
-        autoClose: false,
-        withCloseButton: true,
-      });
-
-      setTimeout(() => {
+            id: `updating-data-${dataProduct?.product.name}`,
+            title: `Actualizando producto "${dataProduct?.product.name}"`,
+            message: "Datos actualizados en aproximadamente un minuto",
+            loading: true,
+            autoClose: 60 * 1000,
+            withCloseButton: true,
+          });
+    }, 2000)
+    tryUpdate().then(res => {
+      if (!res) return
+      if ("isProductOld" in res) clearTimeout(timeout)
+      if ("productUpdated" in res) {
         notifications.update({
           id: "updating-data",
           color: "teal",
@@ -121,11 +137,11 @@ function Content() {
           autoClose: 5000,
         });
         mutateProduct();
-        mutateItems({ ...dataItems, updating: false });
+        mutateItems();
         mutateLowestPrice();
         mutateHighestPrice();
-      }, 40 * 1000);
-    }
+      }
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

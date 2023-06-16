@@ -1,5 +1,8 @@
 # Changelog
 
+## Patch v0.1.4-beta
+  - Avoid products being updated by robots
+
 ## Patch v0.1.3-beta
 
 - Improve SEO performance

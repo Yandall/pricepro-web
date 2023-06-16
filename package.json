@@ -1,6 +1,6 @@
 {
   "name": "pricepro-web",
-  "version": "0.1.1-beta",
+  "version": "0.1.4-beta",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -27,6 +27,7 @@
     "date-fns": "^2.30.0",
     "eslint": "8.37.0",
     "eslint-config-next": "13.2.4",
+    "isbot": "^3.6.10",
     "next": "13.2.4",
     "react": "18.2.0",
     "react-chartjs-2": "^5.2.0",
