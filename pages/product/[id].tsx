@@ -119,28 +119,31 @@ function Content() {
             title: `Actualizando producto "${dataProduct?.product.name}"`,
             message: "Datos actualizados en aproximadamente un minuto",
             loading: true,
-            autoClose: 60 * 1000,
+            autoClose: false,
             withCloseButton: true,
           });
+          setTimeout(() => {
+            notifications.update({
+              id: `updating-data-${dataProduct?.product.name}`,
+              color: "teal",
+              title: "¡Producto actualizado!",
+              message:
+                "Se actualizaron los datos del producto. Ya puedes cerrar esta notificación",
+              icon: <IconCheck />,
+              autoClose: 5000,
+            });
+            mutateProduct();
+            mutateItems();
+            mutateLowestPrice();
+            mutateHighestPrice();
+          }, 60 * 1000)
     }, 2000)
     tryUpdate().then(res => {
       if (!res) return
       if ("isProductOld" in res) clearTimeout(timeout)
-      if ("productUpdated" in res) {
-        notifications.update({
-          id: "updating-data",
-          color: "teal",
-          title: "¡Producto actualizado!",
-          message:
-            "Se actualizaron los datos del producto. Ya puedes cerrar esta notificación",
-          icon: <IconCheck />,
-          autoClose: 5000,
-        });
-        mutateProduct();
-        mutateItems();
-        mutateLowestPrice();
-        mutateHighestPrice();
-      }
+    })
+    .catch(() => {
+      clearTimeout(timeout)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
