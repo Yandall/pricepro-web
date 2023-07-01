@@ -3,6 +3,7 @@ import jumboIcon from "@/public/store-jumbo-icon.webp";
 import carullaIcon from "@/public/store-carulla-icon.webp";
 import d1Icon from "@/public/store-d1-icon.webp"
 import makroIcon from "@/public/store-makro-logo.webp"
+import zapatocaIcon from "@/public/store-zapatoca-icon.webp"
 
 import { StaticImageData } from "next/image";
 import { Image, Tooltip } from "@mantine/core";
@@ -29,10 +30,13 @@ export default function StoreIcon({ store, size }: Props) {
       break;
     case "Makro":
       icon = makroIcon
+      break
+    case "Zapatoca":
+      icon = zapatocaIcon
+      break
   }
   return (
     <Tooltip
-      style={{ display: "flex", gap: "0.5rem" }}
       label={store}
       events={{ focus: true, hover: true, touch: true }}
     >

@@ -68,7 +68,7 @@ export default function ItemCard({
             <Text weight={200} size="sm">
               Marca: {data.brand.name}
             </Text>
-            <Text weight={200} size="sm" component={Flex} gap="xs">
+            <Text weight={200} size="sm" component={Flex} gap="xs" style={{alignItems: 'center'}}>
               Tienda: <StoreIcon store={data.store.name} />
             </Text>
             <Tooltip
