@@ -4,6 +4,7 @@ import carullaIcon from "@/public/store-carulla-icon.webp";
 import d1Icon from "@/public/store-d1-icon.webp"
 import makroIcon from "@/public/store-makro-logo.webp"
 import zapatocaIcon from "@/public/store-zapatoca-icon.webp"
+import olimpicaIcon from "@/public/olimpica.webp"
 
 import { StaticImageData } from "next/image";
 import { Image, Tooltip } from "@mantine/core";
@@ -33,6 +34,9 @@ export default function StoreIcon({ store, size }: Props) {
       break
     case "Zapatoca":
       icon = zapatocaIcon
+      break
+    case "Olimpica":
+      icon = olimpicaIcon
       break
   }
   return (
