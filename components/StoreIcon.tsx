@@ -2,9 +2,9 @@ import exitoIcon from "@/public/store-exito-icon.webp";
 import jumboIcon from "@/public/store-jumbo-icon.webp";
 import carullaIcon from "@/public/store-carulla-icon.webp";
 import d1Icon from "@/public/store-d1-icon.webp"
-import makroIcon from "@/public/store-makro-logo.webp"
+import makroIcon from "@/public/store-makro-icon.webp"
 import zapatocaIcon from "@/public/store-zapatoca-icon.webp"
-import olimpicaIcon from "@/public/olimpica.webp"
+import olimpicaIcon from "@/public/store-olimpica-icon.webp"
 
 import { StaticImageData } from "next/image";
 import { Image, Tooltip } from "@mantine/core";
