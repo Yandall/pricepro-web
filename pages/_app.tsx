@@ -34,7 +34,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <>
       <Head>
-        <title>PricePro | Comparador de precios</title>
+        <title>PricePro - Comparador de precios</title>
 
         <meta
           name="viewport"
@@ -64,7 +64,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         />
         <meta
           property="og:title"
-          content="PricePro | Encuentra el precio más bajo"
+          content="PricePro - Comparador de precios"
           key="og:title"
         />
         <meta property="og:site_name" content="PricePro" />
