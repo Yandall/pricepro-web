@@ -16,7 +16,6 @@ import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 
 export type Props = {
   data: Item;
-  position: number;
   product: Product;
   orderBy: "pricePerUnit" | "price";
 };
@@ -24,7 +23,6 @@ export type Props = {
 export default function ItemCard({
   data,
   product,
-  position,
   orderBy = "pricePerUnit",
 }: Props) {
   const [chartOpened, { open: openChart, close: closeChart }] =
@@ -54,10 +52,10 @@ export default function ItemCard({
           justify="space-between"
           style={{ flex: "1 0 auto" }}
         >
-          <div>
+          <Flex direction="column" h="100%">
             <Flex justify="space-between">
               <Text component="a" href={data.url} target="_blank">
-                {position}. {data.name}
+                {data.name}
               </Text>
               {data.history.length > 1 && (
                 <ActionIcon onClick={openChart}>
@@ -68,7 +66,13 @@ export default function ItemCard({
             <Text weight={200} size="sm">
               Marca: {data.brand.name}
             </Text>
-            <Text weight={200} size="sm" component={Flex} gap="xs" style={{alignItems: 'center'}}>
+            <Text
+              weight={200}
+              size="sm"
+              component={Flex}
+              gap="xs"
+              style={{ alignItems: "center" }}
+            >
               Tienda: <StoreIcon store={data.store.name} />
             </Text>
             <Tooltip
@@ -87,12 +91,12 @@ export default function ItemCard({
                 ? `Precio: $${data.price}`
                 : `Precio por ${product.units}: $${data.pricePerUnit}`}
             </Text>
-            <Text>
+            <Text mt="auto">
               {orderBy === "pricePerUnit"
                 ? `Precio por ${product.units}:`
                 : "Precio:"}
             </Text>
-          </div>
+          </Flex>
           <Badge
             size="lg"
             color="yellow"
