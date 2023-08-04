@@ -1,7 +1,15 @@
 # Changelog
 
+## Patch v0.2.0-beta
+
+- Added 4 new stores (D1, Makro, Zapatoca and Olímpica)
+- Refactored the way data is obtained
+- Added group by store option
+- Migrated from cloudinary to cloudflare R2
+
 ## Patch v0.1.4-beta
-  - Avoid products being updated by robots
+
+- Avoid products being updated by robots
 
 ## Patch v0.1.3-beta
 
