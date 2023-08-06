@@ -10,13 +10,18 @@ type Props = {
 
 export function Paginate({ pages, total, current }: Props) {
   const { query, asPath } = useRouter();
-
   function getPaginationUrl(page: number) {
     let currentPath = asPath.split("?")[0];
     let pageLink = `${currentPath}?page=${page}`;
-    if (query.q && query.q !== "") pageLink += `&q=${query.q}`;
-    if (query.subcategory && query.subcategory !== "")
-      pageLink += `&subcategory=${query.subcategory}`;
+    let queryParams = Object.keys(query);
+    if (queryParams.length > 0) {
+      for (const key of queryParams) {
+        // Ignore [id] and page params
+        if (query[key] !== "" && key !== "id" && key !== "page") {
+          pageLink += `&${key}=${query[key]}`;
+        }
+      }
+    }
     return pageLink;
   }
   return (
