@@ -1,5 +1,9 @@
 # Changelog
 
+## Patch v0.2.1-beta
+
+- Updated metatags data
+
 ## Patch v0.2.0-beta
 
 - Added 4 new stores (D1, Makro, Zapatoca and Olímpica)

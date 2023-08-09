@@ -60,7 +60,7 @@ function Content() {
     <>
       <Head>
         <title>{`${query.q || "Productos"} - PricePro`}</title>
-        <link rel="canonical" href="https://pricepro.vercel.app/search" />
+        <link rel="canonical" href="https://pricepro.com.co/search" />
         <meta
           name="description"
           content="Buscador de productos. Encuentra el precio más barato en diferentes tiendas del país"
@@ -73,7 +73,7 @@ function Content() {
         />
         <meta
           property="og:url"
-          content={`https://pricepro.vercel.app${router.asPath}`}
+          content={`https://pricepro.com.co${router.asPath}`}
           key="og:url"
         />
         <meta

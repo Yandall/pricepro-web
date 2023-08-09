@@ -179,7 +179,7 @@ function Content() {
             <title>{`${dataProduct.product.name} - PricePro`}</title>
             <link
               rel="canonical"
-              href={`https://pricepro.vercel.app/product/${router.query.id}`}
+              href={`https://pricepro.com.co/product/${router.query.id}`}
             />
             <meta
               property="og:title"
@@ -198,7 +198,7 @@ function Content() {
             />
             <meta
               property="og:url"
-              content={`https://pricepro.vercel.app${router.asPath}`}
+              content={`https://pricepro.com.co${router.asPath}`}
               key="og:url"
             />
 

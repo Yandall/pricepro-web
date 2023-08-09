@@ -53,7 +53,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         />
         <meta
           property="og:url"
-          content="https://pricepro.vercel.app"
+          content="https://pricepro.com.co"
           key="og:url"
         />
         <meta
@@ -69,7 +69,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         />
         <meta property="og:site_name" content="PricePro" />
         <meta property="twitter:card" content="summary" />
-        <meta property="twitter:url" content="https://pricepro.vercel.app" />
+        <meta property="twitter:url" content="https://pricepro.com.co" />
         <meta property="twitter:site" content="@priceproapp"></meta>
         <meta
           name="google-site-verification"
