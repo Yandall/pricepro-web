@@ -58,13 +58,6 @@ export default memo(function MainFooter(props: { children?: ReactNode }) {
             >
               <IconBrandLinkedin />
             </a>
-
-            <a
-              href="https://www.tiktok.com/@priceproapp"
-              aria-label="TikTok link"
-            >
-              <IconBrandTiktok />
-            </a>
           </Group>
         </Grid.Col>
       </Grid>
