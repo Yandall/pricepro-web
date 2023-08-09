@@ -54,7 +54,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>PricePro | Encuentra el precio más bajo</title>
+        <title>PricePro - Comparador de precios</title>
         <link rel="canonical" href="https://pricepro.com.co/" />
 
         <meta
