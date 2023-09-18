@@ -1,5 +1,9 @@
 # Changelog
 
+## Patch v0.2.2-beta
+
+- Removed webhook to update product data
+
 ## Patch v0.2.1-beta
 
 - Updated metatags data

@@ -3,19 +3,14 @@ import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
 import { SWRConfig } from "swr";
 import useSWRImmutable from "swr/immutable";
-import useSWRMutation from "swr/mutation";
-
 import { Divider, Flex, Grid, Text, Title } from "@mantine/core";
-import { IconCheck } from "@tabler/icons-react";
 import ItemCard, { Props as ItemProps } from "@/components/ItemCard";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { NextPageContext } from "next";
 import Head from "next/head";
-import { notifications } from "@mantine/notifications";
 import { fetcher } from "@/utils/fetcher";
 import type { Product, Item } from "@/utils/types";
 import { Paginate } from "@/components/Paginate";
-import isbot from "isbot";
 import ProductSummary from "@/components/ProductSummary";
 import { useQueryState } from "next-usequerystate";
 import { useIsClient } from "@/components/IsClient";
@@ -29,17 +24,6 @@ type ItemsData =
   | undefined;
 
 type ProductData = { product: Product } | undefined;
-
-type UpdatingData =
-  | {
-      isProuctOld: boolean;
-      lastUpdate: string;
-    }
-  | {
-      productUpdated: boolean;
-      lastUpdate: string;
-    }
-  | undefined;
 
 function Content() {
   const router = useRouter();
@@ -57,8 +41,10 @@ function Content() {
   if (isClient && !["store", "none"].includes(groupBy!)) setGroupBy("none");
   idProduct = (idProduct as string).split("-")[0];
   const urlProduct = `/api/product/${idProduct}`;
-  const { data: dataProduct, mutate: mutateProduct } =
-    useSWRImmutable<ProductData>(urlProduct, fetcher);
+  const { data: dataProduct } = useSWRImmutable<ProductData>(
+    urlProduct,
+    fetcher
+  );
 
   const pageQuery = `?page=${Number(page) > 0 ? page : 1}`;
   const pageSizeQuery = `&pagesize=24`;
@@ -70,10 +56,7 @@ function Content() {
   const urlItems = idProduct
     ? `/api/items/${idProduct}${pageQuery}${orderByQuery}${pageSizeQuery}`
     : "";
-  const { data: dataItems, mutate: mutateItems } = useSWRImmutable<ItemsData>(
-    urlItems,
-    fetcher
-  );
+  const { data: dataItems } = useSWRImmutable<ItemsData>(urlItems, fetcher);
 
   const urlLowHiPrices = `/api/products/lowHiPrice`;
   const requestBody = {
@@ -82,7 +65,7 @@ function Content() {
     lowest: true,
   };
 
-  const { data: itemLowestPrice, mutate: mutateLowestPrice } = useSWRImmutable<{
+  const { data: itemLowestPrice } = useSWRImmutable<{
     list: Item[];
   }>(
     [
@@ -95,19 +78,18 @@ function Content() {
     ([url, options]: [string, RequestInit]) => fetcher(url, options)
   );
   requestBody.lowest = false;
-  const { data: itemHighestPrice, mutate: mutateHighestPrice } =
-    useSWRImmutable<{
-      list: Item[];
-    }>(
-      [
-        urlLowHiPrices,
-        {
-          method: "POST",
-          body: JSON.stringify(requestBody),
-        },
-      ],
-      ([url, options]: [string, RequestInit]) => fetcher(url, options)
-    );
+  const { data: itemHighestPrice } = useSWRImmutable<{
+    list: Item[];
+  }>(
+    [
+      urlLowHiPrices,
+      {
+        method: "POST",
+        body: JSON.stringify(requestBody),
+      },
+    ],
+    ([url, options]: [string, RequestInit]) => fetcher(url, options)
+  );
 
   const groupedItems = useMemo(() => {
     if (typeof dataItems === "undefined" || dataItems.items.length === 0)
@@ -127,49 +109,6 @@ function Content() {
       return noGroupItems;
     }
   }, [groupBy, dataItems]);
-  const tryUpdateUrl = `/api/product/updateList/${idProduct}`;
-  const { trigger: tryUpdate } = useSWRMutation<UpdatingData>(
-    tryUpdateUrl,
-    (url: string) => fetcher(url)
-  );
-  useEffect(() => {
-    if (isbot(navigator.userAgent)) return;
-
-    const timeout = setTimeout(() => {
-      notifications.show({
-        id: `updating-data-${dataProduct?.product.name}`,
-        title: `Actualizando producto "${dataProduct?.product.name}"`,
-        message: "Datos actualizados en aproximadamente un minuto",
-        loading: true,
-        autoClose: false,
-        withCloseButton: true,
-      });
-      setTimeout(() => {
-        notifications.update({
-          id: `updating-data-${dataProduct?.product.name}`,
-          color: "teal",
-          title: "¡Producto actualizado!",
-          message:
-            "Se actualizaron los datos del producto. Ya puedes cerrar esta notificación",
-          icon: <IconCheck />,
-          autoClose: 5000,
-        });
-        mutateProduct();
-        mutateItems();
-        mutateLowestPrice();
-        mutateHighestPrice();
-      }, 60 * 1000);
-    }, 2000);
-    tryUpdate()
-      .then((res) => {
-        if (!res) return;
-        if ("isProductOld" in res) clearTimeout(timeout);
-      })
-      .catch(() => {
-        clearTimeout(timeout);
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <>
