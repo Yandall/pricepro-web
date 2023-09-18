@@ -249,6 +249,11 @@ export default function Home() {
               <Accordion.Panel>
                 <List>
                   <List.Item>
+                    Por temas de economía y rendimiento la información de los
+                    productos se actualiza cada 3 días. Este valor no es fijo y
+                    podría cambiar en el futuro
+                  </List.Item>
+                  <List.Item>
                     La información puede estar mal. PricePro confía en que la
                     información entregada por las tiendas es correcta, pero esto
                     no siempre es cierto, por lo que te puedes encontrar con
