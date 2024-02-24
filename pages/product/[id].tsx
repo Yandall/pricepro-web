@@ -42,6 +42,7 @@ type UpdatingData =
   | undefined;
 
 function Content() {
+  return <></>;
   const router = useRouter();
   let { id: idProduct, page } = router.query;
   const [orderBy, setOrderBy] = useQueryState("orderBy", {

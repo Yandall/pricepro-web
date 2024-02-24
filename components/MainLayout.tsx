@@ -21,6 +21,7 @@ import NavBar from "./NavBar/NavBar";
 import ColorSchemeToggle from "./ColorSchemeToggle";
 import MainFooter from "./Footer";
 import priceproTitle from "@/public/pricepro_title.webp";
+import { useIsClient } from "./IsClient";
 
 export const MainLayout = memo(function MainLayout({
   children,
@@ -36,7 +37,8 @@ export const MainLayout = memo(function MainLayout({
 
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
-
+  // TODO: remove next line
+  if (useIsClient()) router.push("/maintenance");
   function searchHandler(data: { query: string }) {
     let path = `/search`;
     if (data.query?.trim() !== "") path += `?q=${data.query}`;

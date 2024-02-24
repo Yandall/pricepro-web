@@ -61,6 +61,7 @@ async function insertSuggestion(url: string, { arg }: { arg: SuggestionDTO }) {
 }
 
 export default function Page() {
+  return <></>;
   const form = useForm<SuggestionDTO>({
     initialValues: {
       name: "",

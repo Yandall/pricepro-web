@@ -18,6 +18,8 @@ type ResponseData =
   | undefined;
 
 function Content() {
+  //TODO: delete next line
+  return <></>;
   const router = useRouter();
   const query = router.query;
   const pageQuery = `&page=${Number(query.page) > 0 ? query.page : 1}`;
@@ -180,7 +182,7 @@ export async function getServerSideProps(ctx: NextPageContext) {
   return {
     props: {
       fallback: {
-        [`/api/${endpoint}`]: res,
+        [`/api/${endpoint}`]: res || [],
       },
     },
   };
