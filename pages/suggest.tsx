@@ -61,218 +61,219 @@ async function insertSuggestion(url: string, { arg }: { arg: SuggestionDTO }) {
 }
 
 export default function Page() {
-  const form = useForm<SuggestionDTO>({
-    initialValues: {
-      name: "",
-      description: "",
-      units: "",
-      subcategory: "",
-      exampleUrl: "",
-    },
-    validate: {
-      name: (value) =>
-        value.length < 5 ? "Ingresa al menos 5 caracteres" : null,
-      description: (value) =>
-        value.length < 10 ? "Describe más el producto" : null,
-      units: (value) => (value === "" ? "Debes eligir un valor" : null),
-      subcategory: (value) => (value === "" ? "Debes elegir un valor" : null),
-      exampleUrl: isUrl("Dirección invalida", false),
-    },
-  });
-  const [imgFile, setImgFile] = useState<FileWithPath>();
-  const [productUrl, setProductUrl] = useState("");
-  const debouncedProductUrl = useDebouncedValue(productUrl, 500);
-  const { data: productData } = useSWR<{ list: Product[] }>(
-    debouncedProductUrl[0],
-    fetcher
-  );
-  const { name: productQuery } = form.values;
+  return <></>;
+  // const form = useForm<SuggestionDTO>({
+  //   initialValues: {
+  //     name: "",
+  //     description: "",
+  //     units: "",
+  //     subcategory: "",
+  //     exampleUrl: "",
+  //   },
+  //   validate: {
+  //     name: (value) =>
+  //       value.length < 5 ? "Ingresa al menos 5 caracteres" : null,
+  //     description: (value) =>
+  //       value.length < 10 ? "Describe más el producto" : null,
+  //     units: (value) => (value === "" ? "Debes eligir un valor" : null),
+  //     subcategory: (value) => (value === "" ? "Debes elegir un valor" : null),
+  //     exampleUrl: isUrl("Dirección invalida", false),
+  //   },
+  // });
+  // const [imgFile, setImgFile] = useState<FileWithPath>();
+  // const [productUrl, setProductUrl] = useState("");
+  // const debouncedProductUrl = useDebouncedValue(productUrl, 500);
+  // const { data: productData } = useSWR<{ list: Product[] }>(
+  //   debouncedProductUrl[0],
+  //   fetcher
+  // );
+  // const { name: productQuery } = form.values;
 
-  const { data: subcategoryData } = useSWR<{ list: Subcategory[] }>(
-    `/api/list/subcategory`,
-    fetcher
-  );
+  // const { data: subcategoryData } = useSWR<{ list: Subcategory[] }>(
+  //   `/api/list/subcategory`,
+  //   fetcher
+  // );
 
-  const suggestionURL = `/api/products/suggest`;
-  const { trigger: sendSuggestion } = useSWRMutation(
-    suggestionURL,
-    insertSuggestion
-  );
+  // const suggestionURL = `/api/products/suggest`;
+  // const { trigger: sendSuggestion } = useSWRMutation(
+  //   suggestionURL,
+  //   insertSuggestion
+  // );
 
-  useEffect(() => {
-    setProductUrl(`/api/products/search?search=${productQuery}`);
-  }, [productQuery]);
+  // useEffect(() => {
+  //   setProductUrl(`/api/products/search?search=${productQuery}`);
+  // }, [productQuery]);
 
-  async function submitSuggestion(values: SuggestionDTO) {
-    if (form.validate().hasErrors) return;
-    const subcategoryId =
-      subcategoryData?.list.find((s) => s.name === values.subcategory)?.id +
-        "" || "";
-    if (subcategoryId === "undefined") {
-      form.setFieldError("subcategory", "Elige un valor de la lista");
-      return;
-    }
-    if (imgFile && imgFile.size !== 0) values.imgBuffer = imgFile;
-    const newSuggestion = Object.assign({}, values, {
-      subcategory: +subcategoryId,
-    });
-    try {
-      const res = await sendSuggestion(newSuggestion);
-      if (res.ok) {
-        form.reset();
-        setImgFile(undefined);
-        notifications.show({
-          title: "Éxito",
-          message: "La sugerencia se ha enviado",
-          color: "green",
-          icon: <IconCheck />,
-        });
-      } else
-        notifications.show({
-          title: "Error",
-          message: "El producto ya existe",
-          color: "red",
-          icon: <IconX />,
-        });
-    } catch (error) {
-      notifications.show({
-        title: "Error",
-        message: "La sugerencia ya existe",
-        color: "red",
-        icon: <IconX />,
-      });
-    }
-  }
+  // async function submitSuggestion(values: SuggestionDTO) {
+  //   if (form.validate().hasErrors) return;
+  //   const subcategoryId =
+  //     subcategoryData?.list.find((s) => s.name === values.subcategory)?.id +
+  //       "" || "";
+  //   if (subcategoryId === "undefined") {
+  //     form.setFieldError("subcategory", "Elige un valor de la lista");
+  //     return;
+  //   }
+  //   if (imgFile && imgFile.size !== 0) values.imgBuffer = imgFile;
+  //   const newSuggestion = Object.assign({}, values, {
+  //     subcategory: +subcategoryId,
+  //   });
+  //   try {
+  //     const res = await sendSuggestion(newSuggestion);
+  //     if (res.ok) {
+  //       form.reset();
+  //       setImgFile(undefined);
+  //       notifications.show({
+  //         title: "Éxito",
+  //         message: "La sugerencia se ha enviado",
+  //         color: "green",
+  //         icon: <IconCheck />,
+  //       });
+  //     } else
+  //       notifications.show({
+  //         title: "Error",
+  //         message: "El producto ya existe",
+  //         color: "red",
+  //         icon: <IconX />,
+  //       });
+  //   } catch (error) {
+  //     notifications.show({
+  //       title: "Error",
+  //       message: "La sugerencia ya existe",
+  //       color: "red",
+  //       icon: <IconX />,
+  //     });
+  //   }
+  // }
 
-  return (
-    <>
-      <Head>
-        <title>Sugerir producto | PricePro</title>
-        href={`https://pricepro.com.co/suggest`}
-        <meta
-          name="description"
-          content="Sugiere un producto para que sea añadido a PricePro"
-          key="description"
-        />
-        <meta
-          name="og:description"
-          content="Sugiere un producto para que sea añadido a PricePro"
-          key="og:description"
-        />
-        <meta
-          property="og:url"
-          content="https://pricepro.com.co/suggest"
-          key="og:url"
-        />
-      </Head>
-      <Grid justify="center" pt={20}>
-        <Grid.Col span={11} md={8}>
-          <Title order={1} mb={20}>
-            Sugerir un producto
-          </Title>
-          <Text>
-            Llena el formulario para sugerir un producto que pienses que debería
-            estar en nuestra lista.
-          </Text>
-          <Text>
-            Tu sugerencia será revisada y si cumple con nuestras condiciones la
-            añadiremos a la lista de <b>Productos</b>.
-          </Text>
-          <Text>
-            Las condiciones para que tu sugerencia sea aceptada son las
-            siguientes:
-          </Text>
-          <List>
-            <List.Item>
-              Debe ser un producto que no esté en nuestra lista (el
-              autocompletador te ayudará a verificar que no exista)
-            </List.Item>
-            <List.Item>
-              El producto debe tener unidad (gr, ml, mt, und) para poder ser
-              ordenado
-            </List.Item>
-            <List.Item>
-              El producto debe existir en al menos tres tiendas que esten
-              listadas en <b>PricePro</b>
-            </List.Item>
-          </List>
-          <Card mx="auto" mt={30} style={{ overflow: "auto" }}>
-            <form onSubmit={form.onSubmit(submitSuggestion)}>
-              <Autocomplete
-                label="Producto"
-                withAsterisk
-                placeholder="Arroz blanco"
-                mb={20}
-                data={getAutocompleteData(productData)}
-                {...form.getInputProps("name")}
-              />
-              <Textarea
-                label="Descripción"
-                withAsterisk
-                placeholder="El arroz es un cereal rico en carbohidratos y su principal beneficio para la salud es aportarle energía al organismo. Además de esto, también contiene aminoácidos, vitaminas y minerales esenciales para el funcionamiento del cuerpo."
-                mb={20}
-                {...form.getInputProps("description")}
-              />
-              <Select
-                label="Unidades"
-                withAsterisk
-                placeholder="Gramos"
-                data={[
-                  { value: "gr", label: "Gramos" },
-                  { value: "ml", label: "Mililitros" },
-                  { value: "mt", label: "Metros" },
-                  { value: "und", label: "Unidades" },
-                ]}
-                mb={20}
-                {...form.getInputProps("units")}
-              />
-              <Autocomplete
-                label="Subcategoría"
-                placeholder="Granos"
-                withAsterisk
-                data={getAutocompleteData(subcategoryData)}
-                dropdownPosition="bottom"
-                mb={20}
-                {...form.getInputProps("subcategory")}
-              />
-              <TextInput
-                label="Url ejemplo"
-                placeholder="https://www.exito.com/arroz-blanco-arroba-12500-gr-61887/p"
-                mb={20}
-                {...form.getInputProps("exampleUrl")}
-              />
-              <Dropzone
-                accept={IMAGE_MIME_TYPE}
-                onDrop={(file) => setImgFile(file[0])}
-                maxFiles={1}
-                maxSize={3 * 1024 ** 2}
-              >
-                <Group position="center" spacing="xl">
-                  <IconUpload />
-                  Sube una imagen
-                </Group>
-              </Dropzone>
-              {imgFile && (
-                <SimpleGrid
-                  cols={4}
-                  breakpoints={[{ maxWidth: "sm", cols: 1 }]}
-                  mt="xl"
-                >
-                  <Image
-                    src={URL.createObjectURL(imgFile)}
-                    alt={form.values.name}
-                  />
-                </SimpleGrid>
-              )}
-              <Group position="right" mt="md">
-                <Button type="submit">Enviar</Button>
-              </Group>
-            </form>
-          </Card>
-        </Grid.Col>
-      </Grid>
-    </>
-  );
+  // return (
+  //   <>
+  //     <Head>
+  //       <title>Sugerir producto | PricePro</title>
+  //       href={`https://pricepro.com.co/suggest`}
+  //       <meta
+  //         name="description"
+  //         content="Sugiere un producto para que sea añadido a PricePro"
+  //         key="description"
+  //       />
+  //       <meta
+  //         name="og:description"
+  //         content="Sugiere un producto para que sea añadido a PricePro"
+  //         key="og:description"
+  //       />
+  //       <meta
+  //         property="og:url"
+  //         content="https://pricepro.com.co/suggest"
+  //         key="og:url"
+  //       />
+  //     </Head>
+  //     <Grid justify="center" pt={20}>
+  //       <Grid.Col span={11} md={8}>
+  //         <Title order={1} mb={20}>
+  //           Sugerir un producto
+  //         </Title>
+  //         <Text>
+  //           Llena el formulario para sugerir un producto que pienses que debería
+  //           estar en nuestra lista.
+  //         </Text>
+  //         <Text>
+  //           Tu sugerencia será revisada y si cumple con nuestras condiciones la
+  //           añadiremos a la lista de <b>Productos</b>.
+  //         </Text>
+  //         <Text>
+  //           Las condiciones para que tu sugerencia sea aceptada son las
+  //           siguientes:
+  //         </Text>
+  //         <List>
+  //           <List.Item>
+  //             Debe ser un producto que no esté en nuestra lista (el
+  //             autocompletador te ayudará a verificar que no exista)
+  //           </List.Item>
+  //           <List.Item>
+  //             El producto debe tener unidad (gr, ml, mt, und) para poder ser
+  //             ordenado
+  //           </List.Item>
+  //           <List.Item>
+  //             El producto debe existir en al menos tres tiendas que esten
+  //             listadas en <b>PricePro</b>
+  //           </List.Item>
+  //         </List>
+  //         <Card mx="auto" mt={30} style={{ overflow: "auto" }}>
+  //           <form onSubmit={form.onSubmit(submitSuggestion)}>
+  //             <Autocomplete
+  //               label="Producto"
+  //               withAsterisk
+  //               placeholder="Arroz blanco"
+  //               mb={20}
+  //               data={getAutocompleteData(productData)}
+  //               {...form.getInputProps("name")}
+  //             />
+  //             <Textarea
+  //               label="Descripción"
+  //               withAsterisk
+  //               placeholder="El arroz es un cereal rico en carbohidratos y su principal beneficio para la salud es aportarle energía al organismo. Además de esto, también contiene aminoácidos, vitaminas y minerales esenciales para el funcionamiento del cuerpo."
+  //               mb={20}
+  //               {...form.getInputProps("description")}
+  //             />
+  //             <Select
+  //               label="Unidades"
+  //               withAsterisk
+  //               placeholder="Gramos"
+  //               data={[
+  //                 { value: "gr", label: "Gramos" },
+  //                 { value: "ml", label: "Mililitros" },
+  //                 { value: "mt", label: "Metros" },
+  //                 { value: "und", label: "Unidades" },
+  //               ]}
+  //               mb={20}
+  //               {...form.getInputProps("units")}
+  //             />
+  //             <Autocomplete
+  //               label="Subcategoría"
+  //               placeholder="Granos"
+  //               withAsterisk
+  //               data={getAutocompleteData(subcategoryData)}
+  //               dropdownPosition="bottom"
+  //               mb={20}
+  //               {...form.getInputProps("subcategory")}
+  //             />
+  //             <TextInput
+  //               label="Url ejemplo"
+  //               placeholder="https://www.exito.com/arroz-blanco-arroba-12500-gr-61887/p"
+  //               mb={20}
+  //               {...form.getInputProps("exampleUrl")}
+  //             />
+  //             <Dropzone
+  //               accept={IMAGE_MIME_TYPE}
+  //               onDrop={(file) => setImgFile(file[0])}
+  //               maxFiles={1}
+  //               maxSize={3 * 1024 ** 2}
+  //             >
+  //               <Group position="center" spacing="xl">
+  //                 <IconUpload />
+  //                 Sube una imagen
+  //               </Group>
+  //             </Dropzone>
+  //             {imgFile && (
+  //               <SimpleGrid
+  //                 cols={4}
+  //                 breakpoints={[{ maxWidth: "sm", cols: 1 }]}
+  //                 mt="xl"
+  //               >
+  //                 <Image
+  //                   src={URL.createObjectURL(imgFile)}
+  //                   alt={form.values.name}
+  //                 />
+  //               </SimpleGrid>
+  //             )}
+  //             <Group position="right" mt="md">
+  //               <Button type="submit">Enviar</Button>
+  //             </Group>
+  //           </form>
+  //         </Card>
+  //       </Grid.Col>
+  //     </Grid>
+  //   </>
+  // );
 }
 
 Page.getLayout = getLayout;

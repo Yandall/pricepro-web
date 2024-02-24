@@ -18,136 +18,138 @@ type ResponseData =
   | undefined;
 
 function Content() {
-  const router = useRouter();
-  const query = router.query;
-  const pageQuery = `&page=${Number(query.page) > 0 ? query.page : 1}`;
-  const subcategoryQuery = query.subcategory
-    ? `&subcategory=${query.subcategory}`
-    : "";
-  const urlProducts = `/api/products/search?search=${
-    query.q || ""
-  }${pageQuery}${subcategoryQuery}`;
+  //TODO: delete next line
+  return <></>;
+  // const router = useRouter();
+  // const query = router.query;
+  // const pageQuery = `&page=${Number(query.page) > 0 ? query.page : 1}`;
+  // const subcategoryQuery = query.subcategory
+  //   ? `&subcategory=${query.subcategory}`
+  //   : "";
+  // const urlProducts = `/api/products/search?search=${
+  //   query.q || ""
+  // }${pageQuery}${subcategoryQuery}`;
 
-  const { data, isLoading } = useSWRImmutable<ResponseData>(
-    urlProducts,
-    fetcher
-  );
+  // const { data, isLoading } = useSWRImmutable<ResponseData>(
+  //   urlProducts,
+  //   fetcher
+  // );
 
-  const requestBody = {
-    orderBy: "pricePerUnit",
-    products: data?.list.map((p) => p.id),
-    lowest: true,
-  };
-  const urlLowestPrice = requestBody.products ? `/api/products/lowHiPrice` : "";
-  const { data: dataLowestPrice } = useSWRImmutable<{ list: Item[] }>(
-    [
-      urlLowestPrice,
-      {
-        method: "POST",
-        body: JSON.stringify(requestBody),
-      },
-    ],
-    ([url, options]: [string, RequestInit]) => fetcher(url, options)
-  );
-  const [subcategoryList] = useLocalStorage<Subcategory[]>({
-    key: "subcategoryList",
-  });
-  const subcategorySelected = subcategoryList?.find(
-    (s) => s.id === Number(query.subcategory)
-  );
+  // const requestBody = {
+  //   orderBy: "pricePerUnit",
+  //   products: data?.list.map((p) => p.id),
+  //   lowest: true,
+  // };
+  // const urlLowestPrice = requestBody.products ? `/api/products/lowHiPrice` : "";
+  // const { data: dataLowestPrice } = useSWRImmutable<{ list: Item[] }>(
+  //   [
+  //     urlLowestPrice,
+  //     {
+  //       method: "POST",
+  //       body: JSON.stringify(requestBody),
+  //     },
+  //   ],
+  //   ([url, options]: [string, RequestInit]) => fetcher(url, options)
+  // );
+  // const [subcategoryList] = useLocalStorage<Subcategory[]>({
+  //   key: "subcategoryList",
+  // });
+  // const subcategorySelected = subcategoryList?.find(
+  //   (s) => s.id === Number(query.subcategory)
+  // );
 
-  return (
-    <>
-      <Head>
-        <title>{`${query.q || "Productos"} - PricePro`}</title>
-        <link rel="canonical" href="https://pricepro.com.co/search" />
-        <meta
-          name="description"
-          content="Buscador de productos. Encuentra el precio más barato en diferentes tiendas del país"
-          key="description"
-        />
-        <meta
-          name="og:description"
-          content="Buscador de productos. Encuentra el precio más barato en diferentes tiendas del país"
-          key="og:description"
-        />
-        <meta
-          property="og:url"
-          content={`https://pricepro.com.co${router.asPath}`}
-          key="og:url"
-        />
-        <meta
-          property="og:title"
-          content={`${query.q || "Productos"} - PricePro`}
-          key="og:title"
-        />
-      </Head>
-      <Flex justify="space-between" direction="column" gap="lg" h="100%">
-        <Grid>
-          {isLoading && (
-            <Grid.Col span={12} style={{ textAlign: "center" }}>
-              <Loader size="xl" />
-            </Grid.Col>
-          )}
+  // return (
+  //   <>
+  //     <Head>
+  //       <title>{`${query.q || "Productos"} - PricePro`}</title>
+  //       <link rel="canonical" href="https://pricepro.com.co/search" />
+  //       <meta
+  //         name="description"
+  //         content="Buscador de productos. Encuentra el precio más barato en diferentes tiendas del país"
+  //         key="description"
+  //       />
+  //       <meta
+  //         name="og:description"
+  //         content="Buscador de productos. Encuentra el precio más barato en diferentes tiendas del país"
+  //         key="og:description"
+  //       />
+  //       <meta
+  //         property="og:url"
+  //         content={`https://pricepro.com.co${router.asPath}`}
+  //         key="og:url"
+  //       />
+  //       <meta
+  //         property="og:title"
+  //         content={`${query.q || "Productos"} - PricePro`}
+  //         key="og:title"
+  //       />
+  //     </Head>
+  //     <Flex justify="space-between" direction="column" gap="lg" h="100%">
+  //       <Grid>
+  //         {isLoading && (
+  //           <Grid.Col span={12} style={{ textAlign: "center" }}>
+  //             <Loader size="xl" />
+  //           </Grid.Col>
+  //         )}
 
-          {subcategorySelected && (
-            <Grid.Col span={12}>
-              <Badge
-                size="xl"
-                variant="filled"
-                color="teal"
-                pr={3}
-                component="h2"
-                m={0}
-                rightSection={
-                  <ActionIcon
-                    size="md"
-                    radius="xl"
-                    variant="transparent"
-                    c="white"
-                    onClick={() => router.push("/search")}
-                  >
-                    <IconX></IconX>
-                  </ActionIcon>
-                }
-              >
-                {subcategorySelected.category.name} - {subcategorySelected.name}
-              </Badge>
-            </Grid.Col>
-          )}
-          {data && data.list.length > 0 && (
-            <>
-              <Text fw={600} fz={30} ta="center" component="h1" display="none">
-                Productos
-              </Text>
-              {data.list.map((prod) => (
-                <Grid.Col key={prod.id} span={6} md={4} lg={2.4} xl={2}>
-                  <ProductCard
-                    data={prod}
-                    cheapest={dataLowestPrice?.list.find(
-                      (item) => item.product === prod.id
-                    )}
-                  />
-                </Grid.Col>
-              ))}
-            </>
-          )}
-          {(!data || data.list.length === 0) && !isLoading && (
-            <Grid.Col span={12}>
-              <Text fw={600} fz={30} ta="center" component="h1">
-                No se encontraron productos
-              </Text>
-            </Grid.Col>
-          )}
-        </Grid>
-        <Paginate
-          pages={data?.metadata.pages}
-          total={data?.metadata.total}
-          current={data?.list.length}
-        />
-      </Flex>
-    </>
-  );
+  //         {subcategorySelected && (
+  //           <Grid.Col span={12}>
+  //             <Badge
+  //               size="xl"
+  //               variant="filled"
+  //               color="teal"
+  //               pr={3}
+  //               component="h2"
+  //               m={0}
+  //               rightSection={
+  //                 <ActionIcon
+  //                   size="md"
+  //                   radius="xl"
+  //                   variant="transparent"
+  //                   c="white"
+  //                   onClick={() => router.push("/search")}
+  //                 >
+  //                   <IconX></IconX>
+  //                 </ActionIcon>
+  //               }
+  //             >
+  //               {subcategorySelected.category.name} - {subcategorySelected.name}
+  //             </Badge>
+  //           </Grid.Col>
+  //         )}
+  //         {data && data.list.length > 0 && (
+  //           <>
+  //             <Text fw={600} fz={30} ta="center" component="h1" display="none">
+  //               Productos
+  //             </Text>
+  //             {data.list.map((prod) => (
+  //               <Grid.Col key={prod.id} span={6} md={4} lg={2.4} xl={2}>
+  //                 <ProductCard
+  //                   data={prod}
+  //                   cheapest={dataLowestPrice?.list.find(
+  //                     (item) => item.product === prod.id
+  //                   )}
+  //                 />
+  //               </Grid.Col>
+  //             ))}
+  //           </>
+  //         )}
+  //         {(!data || data.list.length === 0) && !isLoading && (
+  //           <Grid.Col span={12}>
+  //             <Text fw={600} fz={30} ta="center" component="h1">
+  //               No se encontraron productos
+  //             </Text>
+  //           </Grid.Col>
+  //         )}
+  //       </Grid>
+  //       <Paginate
+  //         pages={data?.metadata.pages}
+  //         total={data?.metadata.total}
+  //         current={data?.list.length}
+  //       />
+  //     </Flex>
+  //   </>
+  // );
 }
 
 const Page: NextPageWithLayout<{ fallback: { [k: string]: ResponseData } }> = ({
@@ -180,7 +182,7 @@ export async function getServerSideProps(ctx: NextPageContext) {
   return {
     props: {
       fallback: {
-        [`/api/${endpoint}`]: res,
+        [`/api/${endpoint}`]: res || [],
       },
     },
   };
