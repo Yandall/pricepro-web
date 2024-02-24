@@ -14,7 +14,7 @@ export default function Page() {
     <Flex
       justify="center"
       align="center"
-      style={{ height: "100vh" }}
+      style={{ height: "100vh", paddingInline: "16px" }}
       direction="column"
       gap="xl"
     >
@@ -37,7 +37,7 @@ export default function Page() {
       >
         Pricepro está en mantenimiento. Estamos mejorando
       </Text>
-      <Text>
+      <Text align="center">
         Revisa nuestras redes sociales para ver todas las noticias sobre
         Pricepro
       </Text>
